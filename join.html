@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>OneDollarCult - Join</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+  }
+  .form-container {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  }
+  h2 {
+    color: #00f6ff;
+    margin-bottom: 20px;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+  }
+  button {
+    background: #00f6ff;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1em;
+    box-shadow: 0 0 15px #00f6ff;
+  }
+  img {
+    margin-top: 15px;
+    display: none;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #00f6ff;
+  }
+</style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Вступи в Культ</h2>
+    <form id="joinForm" enctype="multipart/form-data">
+      <input type="text" name="nickname" id="nickname" placeholder="Имя в культе" required>
+      <input type="email" name="email" id="email" placeholder="Email" required>
+      <input type="file" name="avatar" id="avatar" accept="image/*" onchange="previewAvatar()">
+      <img id="preview">
+      <button type="submit">Кинуть 1$</button>
+    </form>
+  </div>
+
+<script>
+function previewAvatar() {
+  const file = document.getElementById('avatar').files[0];
+  const preview = document.getElementById('preview');
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+document.getElementById('joinForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const formData = new FormData();
+  formData.append("nickname", document.getElementById("nickname").value.trim());
+  formData.append("email", document.getElementById("email").value.trim());
+  const avatar = document.getElementById("avatar").files[0];
+  if (avatar) formData.append("avatar", avatar);
+
+  const res = await fetch("https://yourproject.up.railway.app/api/join", {
+    method: "POST",
+    body: formData
+  });
+
+  const result = await res.json();
+  alert(result.message || JSON.stringify(result));
+});
+</script>
+</body>
+</html>
