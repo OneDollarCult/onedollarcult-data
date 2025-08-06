@@ -1,7 +1,0 @@
-{
-  "players": [
-    { "id": 1, "email": "user1@example.com", "joined_at": "2025-07-20T17:00:00Z" },
-    { "id": 2, "email": "user2@example.com", "joined_at": "2025-07-23T11:30:00Z" },
-    { "id": 3, "email": "user3@example.com", "joined_at": "2025-07-26T19:45:00Z" }
-  ]
-}
