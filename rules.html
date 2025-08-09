@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="nav_rules">Правила — OneDollarCult</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    body { background: radial-gradient(circle at center, #14022b, #000); color:#fff; font-family:'Russo One', sans-serif; margin:0; }
+    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
+    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
+    .lang { position:absolute; right:20px; top:16px; display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
+    select { background:#1f033d; color:#fff; border:1px solid #8000ff; border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif; }
+
+    .container { text-align:center; padding:30px 20px; }
+    .box { background:#1f033d; padding:25px 30px; border-radius:12px; display:inline-block; box-shadow:0 0 15px #8000ff; max-width:700px; }
+    h1 { text-shadow:0 0 8px #f0f; margin:0 0 12px; font-size:26px; }
+    ul { text-align:left; margin:0 auto; max-width:600px; padding-left:20px; font-size:15px; }
+    li { margin:8px 0; line-height:1.45; }
+  </style>
+  <script src="public/i18n.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <nav>
+      <a href="index.html" data-i18n="nav_home">Главная</a>
+      <a href="philosophy.html" data-i18n="nav_philosophy">Философия</a>
+    </nav>
+    <div class="lang"><span data-i18n="lang_label">Язык</span>
+      <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="box">
+      <h1 data-i18n="rules_title">Кодекс Культа</h1>
+      <ul>
+        <li data-i18n="rule_1"></li>
+        <li data-i18n="rule_2"></li>
+        <li data-i18n="rule_3"></li>
+        <li data-i18n="rule_4"></li>
+        <li data-i18n="rule_5"></li>
+        <li data-i18n="rule_6"></li>
+      </ul>
+    </div>
+  </div>
+
+  <script>langSel.value=LANG;langSel.addEventListener('change',e=>I18N.setLang(e.target.value));</script>
+</body>
+</html>

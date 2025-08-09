@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="nav_philosophy">Философия — OneDollarCult</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    body { background: radial-gradient(circle at center, #14022b, #000); color:#fff; font-family:'Russo One', sans-serif; margin:0; }
+    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
+    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
+    .lang { position:absolute; right:20px; top:16px; display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
+    select { background:#1f033d; color:#fff; border:1px solid #8000ff; border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif; }
+
+    .wrap{ text-align:center; padding:25px 20px; }
+    .box { background:#1f033d; padding:20px 25px; border-radius:12px; display:inline-block; box-shadow:0 0 15px #8000ff; max-width:650px; }
+    h2 { text-shadow:0 0 8px #f0f; margin:0 0 10px; font-size:24px; text-align:center; }
+    p { line-height:1.4; color:#ddd; font-size:14px; margin-bottom:12px; text-align:left; }
+  </style>
+  <script src="public/i18n.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <nav>
+      <a href="index.html" data-i18n="nav_home">Главная</a>
+      <a href="rules.html" data-i18n="nav_rules">Правила</a>
+    </nav>
+    <div class="lang"><span data-i18n="lang_label">Язык</span>
+      <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="box">
+      <h2 data-i18n="ph_title">Легенда о Монете</h2>
+      <p data-i18n="ph_p1"></p>
+      <p data-i18n="ph_p2"></p>
+      <p data-i18n="ph_p3"></p>
+    </div>
+  </div>
+
+  <script>langSel.value=LANG;langSel.addEventListener('change',e=>I18N.setLang(e.target.value));</script>
+</body>
+</html>

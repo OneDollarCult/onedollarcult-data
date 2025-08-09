@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="join_title">Регистрация — OneDollarCult</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    body { background: radial-gradient(circle at center,#14022b,#000); color:#fff; font-family:'Russo One', sans-serif; margin:0; }
+    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
+    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
+    .lang { position:absolute; right:20px; top:16px; display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
+    select { background:#1f033d; color:#fff; border:1px solid #8000ff; border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif; }
+
+    .container { text-align:center; padding:20px; }
+    .box { background:#1f033d; padding:22px 26px; border-radius:12px; display:inline-block; box-shadow:0 0 15px #8000ff; max-width:520px; }
+    h2 { text-shadow:0 0 8px #f0f; margin:6px 0 14px; }
+    input[type="text"], input[type="email"] { margin:8px 0; padding:10px; width:280px; font-size:15px; border-radius:8px; border:none; font-family:'Russo One', sans-serif; }
+    
+    button { 
+      background:#ff0044; 
+      color:#fff; 
+      cursor:pointer; 
+      box-shadow:0 0 12px #ff0044; 
+      border:none; 
+      border-radius:10px; 
+      padding:12px 18px; 
+      width:280px; 
+      font-size:16px; 
+      font-family:'Russo One', sans-serif;
+    }
+    button:hover{ background:#ff2266; box-shadow:0 0 16px #ff2266; }
+
+    .avatar-preview { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #8000ff; margin: 12px auto; background:#000 center/cover no-repeat; box-shadow: 0 0 12px rgba(128,0,255,0.6); }
+
+    /* Кастомный загрузчик */
+    .uploader { display:flex; flex-direction:column; align-items:center; gap:6px; margin:10px 0 14px; }
+    #fileInput { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; } /* прячем системный */
+    .file-btn { 
+      display:inline-block; 
+      background:#ffffff; 
+      color:#000; 
+      border-radius:8px; 
+      padding:10px 14px; 
+      cursor:pointer; 
+      user-select:none; 
+      font-family:'Russo One', sans-serif;
+    }
+    .file-name { font-size:14px; color:#cfcbe8; min-height:18px; font-family:'Russo One', sans-serif; }
+
+    @media (max-width:599px){ .box{ max-width: 92%; } input,button{ width: 100%; } }
+  </style>
+  <script src="public/i18n.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <nav>
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <a href="rules.html" data-i18n="nav_rules">Rules</a>
+      <a href="winners.html" data-i18n="nav_winners">Winners</a>
+    </nav>
+    <div class="lang"><span data-i18n="lang_label">Language</span>
+      <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="box">
+      <h2 data-i18n="join_title">Registration</h2>
+
+      <input id="nick" type="text" data-i18n-ph="ph_nick" placeholder="Nickname" /><br>
+      <input id="email" type="email" data-i18n-ph="ph_email" placeholder="Email" /><br>
+
+      <div class="avatar-preview" id="avatarPreview"></div>
+
+      <!-- Кастомный загрузчик -->
+      <div class="uploader">
+        <input id="fileInput" type="file" accept="image/*" />
+        <label for="fileInput" class="file-btn" id="fileBtn">Choose file</label>
+        <div class="file-name" id="fileName">No file chosen</div>
+      </div>
+
+      <button id="goPayBtn" data-i18n="btn_go_pay">Send $1</button>
+    </div>
+  </div>
+
+  <script>
+    const UTXT = {
+      ru: { choose: 'Выбери файл', none: 'Файл не выбран' },
+      en: { choose: 'Choose file',   none: 'No file chosen' }
+    };
+
+    const langSel = document.getElementById('langSel');
+    langSel.value = LANG;
+    langSel.addEventListener('change', e => I18N.setLang(e.target.value));
+
+    const defaultAvatarPath = 'public/logo.png';
+    let selectedAvatar = null;
+
+    const fileInput = document.getElementById('fileInput');
+    const fileBtn   = document.getElementById('fileBtn');
+    const fileName  = document.getElementById('fileName');
+    const avatarPreview = document.getElementById('avatarPreview');
+
+    function paintUploaderTexts() {
+      const L = I18N.lang() === 'ru' ? 'ru' : 'en';
+      fileBtn.textContent  = UTXT[L].choose;
+      if(!fileInput.files.length) fileName.textContent = UTXT[L].none;
+    }
+    paintUploaderTexts();
+    window.addEventListener('langchange', paintUploaderTexts);
+
+    fileInput.addEventListener('change', e=>{
+      const file = e.target.files[0];
+      if(file){
+        fileName.textContent = file.name;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          avatarPreview.style.backgroundImage = `url(${ev.target.result})`;
+          selectedAvatar = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      }else{
+        paintUploaderTexts();
+        avatarPreview.style.backgroundImage = 'none';
+        selectedAvatar = null;
+      }
+    });
+
+    document.getElementById('goPayBtn').addEventListener('click', async ()=>{
+      const nickname = document.getElementById('nick').value.trim();
+      const emailVal = document.getElementById('email').value.trim();
+      if(!nickname || !emailVal){
+        alert(I18N.lang()==='ru'?'Заполни ник и email':'Fill nickname and email');
+        return;
+      }
+
+      if(!selectedAvatar) selectedAvatar = defaultAvatarPath;
+
+      localStorage.setItem('nickname', nickname);
+      localStorage.setItem('email', emailVal);
+      localStorage.setItem('avatar', selectedAvatar);
+
+      if (location.protocol !== 'file:') {
+        try {
+          await fetch('/api/save-user', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ nickname, email: emailVal, avatar: selectedAvatar })
+          });
+        } catch(e) { }
+      }
+
+      window.location.href='payment.html';
+    });
+  </script>
+</body>
+</html>

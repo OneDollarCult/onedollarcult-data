@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title data-i18n="title_main">OneDollarCult</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; padding:0; font-family:'Russo One', sans-serif; background: radial-gradient(circle at center,#1a0033,#000); color:#fff; }
+
+    /* ====== HEADER ====== */
+    .topbar{
+      position:relative;
+      padding:22px 20px 8px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
+
+    /* правая полка: соцсети + язык в одном flex, чтобы не пересекались */
+    .right {
+      position:absolute;
+      right:20px;
+      top:12px;
+      display:flex;
+      align-items:center;
+      gap:16px;            /* расстояние между соцсетями и языком */
+    }
+
+    .social{ display:flex; gap:12px; }
+    .social a{
+      display:inline-flex; width:28px; height:28px;
+      align-items:center; justify-content:center;
+      border:1px solid #6a00ff; border-radius:8px;
+      background:#1b0433; box-shadow:0 0 8px #6a00ff55;
+    }
+    .social svg{ width:18px; height:18px; fill:#ffffff; }
+
+    .lang { display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
+    select {
+      background:#1f033d; color:#fff; border:1px solid #8000ff;
+      border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif;
+    }
+
+    /* ====== HERO ====== */
+    h1 { text-align:center; font-size:48px; margin:10px 0; color:#fff; text-shadow:0 0 12px #f0f; }
+    .slogan { text-align:center; font-size:20px; color:#ccc; margin-bottom:30px; }
+    .button {
+      display:block; width:max-content; margin:0 auto; background:#ff0044; color:#fff;
+      font-size:24px; padding:16px 34px; border-radius:16px; text-decoration:none;
+      box-shadow:0 0 15px #ff0044; transition:.2s; font-family:'Russo One', sans-serif;
+    }
+    .button:hover { background:#ff2266; box-shadow:0 0 25px #ff2266; }
+
+    .stats { display:flex; justify-content:center; gap:24px; margin:30px auto 20px; font-size:20px; flex-wrap:wrap; padding:0 14px; }
+    .card { background:#1f033d; padding:18px 24px; border-radius:12px; border:1px solid #8000ff; box-shadow:0 0 12px #8000ff33; min-width:240px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+    #stat-players { display:flex; align-items:center; justify-content:center; }
+
+    .footer { text-align:center; margin:24px 0 40px; font-size:18px; color:#bbb; text-shadow:0 0 8px #8000ff; }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 820px){
+      .right{ right:12px; gap:12px; }
+      .social a{ width:26px; height:26px; }
+      .social svg{ width:16px; height:16px; }
+    }
+    @media (max-width: 599px){
+      nav a { margin:0 10px; font-size:16px; }
+      .lang span{ display:none; }                 /* экономим место — скрываем слово «Язык» */
+      .social{ gap:8px; }
+      .social a{ width:24px; height:24px; }
+      .social svg{ width:15px; height:15px; }
+      h1{ font-size:34px; }
+      .button{ font-size:20px; padding:14px 26px; }
+      .stats{ gap:14px; }
+      .card{ min-width:210px; }
+      .footer{ font-size:16px; }
+    }
+  </style>
+  <script src="public/i18n.js"></script>
+  <script src="public/stats.js" defer></script>
+</head>
+<body>
+  <div class="topbar">
+    <nav>
+      <a href="index.html" data-i18n="nav_home">Главная</a>
+      <a href="rules.html" data-i18n="nav_rules">Правила</a>
+      <a href="winners.html" data-i18n="nav_winners">Победители</a>
+      <a href="philosophy.html" data-i18n="nav_philosophy">Философия</a>
+    </nav>
+
+    <!-- правая полка: соцсети + язык -->
+    <div class="right">
+      <div class="social">
+        <a href="https://x.com/OneDollarCult" target="_blank" aria-label="X">
+          <svg viewBox="0 0 24 24"><path d="M18 2h3l-7.5 8.6L22 22h-7l-4.6-6L5 22H2l8.1-9.3L2 2h7l4.2 5.6L18 2z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@onedollarcult" target="_blank" aria-label="TikTok">
+          <svg viewBox="0 0 24 24"><path d="M21 8.6a6.9 6.9 0 0 1-4.2-1.5v6.4a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1v3a3.6 3.6 0 1 0 2.7 3.4V2h3a6.9 6.9 0 0 0 4.1 4.1V8.6z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@OneDollarCult" target="_blank" aria-label="YouTube">
+          <svg viewBox="0 0 24 24"><path d="M23 8.2a3 3 0 0 0-2.1-2c-1.8-.5-9-.5-9-.5s-7.2 0-9 .5A3 3 0 0 0 .8 8.2 31 31 0 0 0 .5 12a31 31 0 0 0 .3 3.8 3 3 0 0 0 2.1 2c1.8.5 9 .5 9 .5s7.2 0 9-.5a3 3 0 0 0 2.1-2c.2-1.2.3-2.5.3-3.8s-.1-2.6-.3-3.8zM9.8 15.5V8.5l6 3.5-6 3.5z"/></svg>
+        </a>
+      </div>
+      <div class="lang">
+        <span data-i18n="lang_label">Язык</span>
+        <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+      </div>
+    </div>
+  </div>
+
+  <h1 data-i18n="title_main">OneDollarCult</h1>
+  <div class="slogan" data-i18n="slogan">Один доллар. Один шанс. Один победитель.</div>
+
+  <a href="join.html" class="button" data-i18n="btn_send1">Кинуть $1</a>
+
+  <div class="stats">
+    <div class="card">
+      <div data-i18n="till_ritual">До ритуала:</div>
+      <div id="countdown" style="font-size:22px; margin-top:6px;"><strong>—</strong></div>
+    </div>
+    <div class="card" id="stat-players">👁 —</div>
+    <div class="card">
+      <div id="stat-bank">💰 —</div>
+      <div style="margin-top:8px; font-size:14px; color:#aaa;" data-i18n="bank_hint">Победитель получит 50% от банка</div>
+    </div>
+    <div class="card">
+      <div data-i18n="latest_winner">👑 Победитель прошлой недели:</div>
+      <div id="latest-winner" style="margin-top:6px;" data-i18n="latest_wait">Ожидание ритуала...</div>
+    </div>
+  </div>
+
+  <div class="footer" id="ritual-time">...</div>
+
+  <script>
+    // инициализация селектора языка
+    document.getElementById('langSel').value = LANG;
+    document.getElementById('langSel').addEventListener('change', e => I18N.setLang(e.target.value));
+  </script>
+</body>
+</html>
