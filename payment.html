@@ -104,8 +104,8 @@
   <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
   <script>
     const TXT = {
-      ru:{home:'Главная',rules:'Правила',ttl:'Оплати 1 USDT (TRC-20)',send:'Отправь ровно 1 USDT на адрес:',hint:'Отсканируй QR или нажми на адрес, чтобы скопировать. После перевода нажми кнопку ниже.',btn:'Я перевёл(а) — проверить'},
-      en:{home:'Home',rules:'Rules',ttl:'Pay 1 USDT (TRC-20)',send:'Send exactly 1 USDT to:',hint:'Scan the QR or tap the address to copy. After sending, press the button below.',btn:'I sent — check'}
+      ru:{home:'Главная',rules:'Правила',ttl:'Оплати 1 USDT (TRC-20)',send:'Отправь ровно 1 USDT на адрес:',hint:'Отсканируй QR или нажми на адрес, чтобы скопировать. После перевода нажми кнопку ниже.',btn:'Я перевёл(а) — проверить',checking:'Проверяем платёж…',ok:'Платёж найден! Добро пожаловать в ритуал.',fail:'Платёж не найден. Если перевод только что отправлен — подождите 1–2 мин и попробуйте ещё раз.',err:'Ошибка связи. Попробуйте позже.'},
+      en:{home:'Home',rules:'Rules',ttl:'Pay 1 USDT (TRC-20)',send:'Send exactly 1 USDT to:',hint:'Scan the QR or tap the address to copy. After sending, press the button below.',btn:'I sent — check',checking:'Checking payment…',ok:'Payment found! Welcome to the ritual.',fail:'Payment not found. If you just sent it, wait 1–2 minutes and try again.',err:'Network error. Try later.'}
     };
 
     const ADDRESS = 'TX5iuanUcs1YubXrFyDtM3L7Jvhr4vWyij';
@@ -118,12 +118,7 @@
     // Генерация QR через qrious -> dataURL
     function drawQR(){
       try{
-        const qr = new QRious({
-          value: ADDRESS,
-          size: 220, // компактный
-          background: '#fff',
-          foreground: '#000'
-        });
+        const qr = new QRious({ value: ADDRESS, size: 220, background:'#fff', foreground:'#000' });
         const url = qr.toDataURL('image/png');
         imgEl.onload = () => { imgEl.style.display='block'; };
         imgEl.onerror = () => fallbackQR();
@@ -131,7 +126,7 @@
       }catch(e){ fallbackQR(); }
     }
 
-    // Фолбэк — публичный PNG (на случай, если CDN не зашёл)
+    // Фолбэк — публичный PNG
     function fallbackQR(){
       const url = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(ADDRESS);
       imgEl.onload = () => { imgEl.style.display='block'; fbEl.style.display='none'; };
@@ -146,9 +141,6 @@
         addrEl.style.textShadow='0 0 18px #39f8d8'; setTimeout(()=>addrEl.style.textShadow='', 700);
       }catch(_){}
     });
-
-    // переход (пока) на join для проверки
-    btn.addEventListener('click', ()=> location.href='join.html');
 
     // язык
     function applyLang(lc){
@@ -166,6 +158,33 @@
       applyLang(e.target.value);
     });
 
+    // Проверка оплаты — БЕЗ изменения внешнего вида (alert'ы)
+    async function verifyPayment(){
+      const lc = document.documentElement.lang || 'ru';
+      const t = TXT[lc] || TXT.ru;
+
+      const prev = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = t.checking;
+
+      try{
+        const r = await fetch('/api/check-payment', { method:'POST' });
+        const data = await r.json();
+        if(data.ok && data.found){
+          alert('✅ ' + t.ok);
+          // можно вернуть на главную
+          location.href = 'index.html';
+        }else{
+          alert('❌ ' + t.fail);
+        }
+      }catch(e){
+        alert('⚠️ ' + t.err);
+      }finally{
+        btn.disabled = false;
+        btn.textContent = prev;
+      }
+    }
+
     // init
     (function(){
       addrEl.textContent = ADDRESS;
@@ -173,7 +192,10 @@
       langSel.value = saved; applyLang(saved);
       drawQR();
 
-      // если экран низкий — чуть уменьшим карточку
+      // обработчик кнопки — теперь проверка, а не переход
+      btn.addEventListener('click', verifyPayment);
+
+      // если экран низкий — слегка уменьшим карточку
       const lowH = window.innerHeight < 720 && window.innerWidth >= 1100;
       if(lowH){
         const c = document.querySelector('.card');
