@@ -6,92 +6,69 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
   <style>
-    :root{
-      --violet:#8b31ff;
-      --card:#1f033d;
-      --btn:#ff0044;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+    :root{ --violet:#8b31ff; --card:#1b0235; --btn:#ff0044; }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
-      margin:0;
+      margin:0; color:#fff; text-align:center;
       font-family:'Russo One', system-ui, arial, sans-serif;
-      color:#fff; text-align:center;
-      background: radial-gradient(1200px 600px at 50% -10%, #22004a 0%, #0b0014 60%, #000 100%);
-      /* десктоп — без скролла */
-      overflow:hidden;
+      background: radial-gradient(1100px 520px at 50% -10%, #21004a 0%, #0b0016 60%, #000 100%);
+      overflow:hidden; /* десктоп — без скролла */
     }
 
-    /* Навигация */
-    nav{
-      display:flex; align-items:center; justify-content:center; gap:22px;
-      padding:16px 16px 0;
-      position:relative;
-    }
-    nav a{ color:#fff; text-decoration:none; font-size:20px; opacity:.95 }
+    /* NAV */
+    nav{ display:flex; gap:18px; align-items:center; justify-content:center; padding:12px 14px 0; position:relative; }
+    nav a{ color:#fff; text-decoration:none; font-size:18px; opacity:.95 }
     nav a:hover{ text-shadow:0 0 10px #fff3 }
     .lang{
-      position:absolute; right:16px; top:10px;
-      font-family:'Russo One', sans-serif;
-      font-size:14px; padding:8px 10px; border-radius:12px;
-      border:1px solid #7740ff; background:#14022b; color:#fff;
-      box-shadow:0 0 10px #7a27ff44;
+      position:absolute; right:14px; top:6px;
+      font-family:'Russo One', sans-serif; font-size:13px;
+      padding:6px 9px; border-radius:11px; border:1px solid #7740ff;
+      background:#13022c; color:#fff; box-shadow:0 0 10px #7a27ff44;
     }
 
-    /* Центровка карточки по высоте (без скролла) */
-    .wrap{
-      height:calc(100vh - 70px);
-      display:flex; align-items:center; justify-content:center;
-      padding:10px 16px 24px;
-    }
+    /* LAYOUT */
+    .wrap{ height:calc(100vh - 58px); display:flex; align-items:center; justify-content:center; padding:8px 10px 18px; }
     .card{
-      width:min(900px, 94vw);
+      width:min(820px, 94vw);
       background:var(--card);
-      border-radius:18px;
-      box-shadow:0 0 0 1px var(--violet), 0 0 24px #8b31ff44;
-      padding:18px 22px 26px;
+      border-radius:16px;
+      box-shadow:0 0 0 1px var(--violet), 0 0 18px #8b31ff40;
+      padding:14px 18px 20px;
     }
 
-    h1{
-      margin:8px 0 8px;
-      font-size:clamp(22px, 3vw, 36px);
-      letter-spacing:.5px;
-      text-shadow:0 0 16px #f0f;
-    }
-    .lead{font-size:clamp(14px,1.6vw,20px); opacity:.95; margin-bottom:8px}
-    .addr{
-      color:#39f8d8;
-      font-size:clamp(16px, 2vw, 24px);
-      margin:4px 0 12px;
-      cursor:pointer; user-select:all; display:inline-block;
-    }
+    h1{ margin:6px 0 6px; font-size:clamp(20px,2.4vw,30px); text-shadow:0 0 14px #f0f; }
+    .lead{ font-size:clamp(13px,1.4vw,18px); margin:2px 0 8px; opacity:.95; }
+    .addr{ color:#39f8d8; font-size:clamp(15px,1.8vw,22px); cursor:pointer; user-select:all; display:inline-block; }
 
-    .qr-shell{
-      margin:6px auto 12px;
-      width:min(280px, 60vw); height:min(280px, 60vw);
+    .qr-box{
+      margin:8px auto 10px;
+      width:min(240px, 58vw); height:min(240px, 58vw);
       display:flex; align-items:center; justify-content:center;
-      background:#0a0017; border-radius:14px;
-      box-shadow: inset 0 0 0 2px #7a27ff, 0 0 14px #7a27ff55;
+      background:#090017; border-radius:12px;
+      box-shadow: inset 0 0 0 2px #7a27ff, 0 0 12px #7a27ff55;
+      position:relative;
     }
-    #qrimg{ width:92%; height:92%; object-fit:contain; border-radius:10px }
+    #qrimg{ width:92%; height:92%; object-fit:contain; border-radius:8px }
+    #qrFallback{ position:absolute; inset:0; display:none; align-items:center; justify-content:center; padding:12px; color:#bdb9d1; font-size:13px; }
 
-    .hint{ color:#bdb9d1; font-size:clamp(12px,1.4vw,16px); margin:8px 0 16px; opacity:.9 }
+    .hint{ color:#bdb9d1; font-size:clamp(12px,1.3vw,15px); margin:6px 0 12px; opacity:.9 }
 
     .btn{
       display:inline-block; border:0; cursor:pointer;
-      font-family:'Russo One', system-ui, arial, sans-serif;  /* строго Russo One */
-      font-size:clamp(18px, 2vw, 24px);
-      padding:14px 26px; border-radius:14px;
+      font-family:'Russo One', system-ui, arial, sans-serif; /* строго Russo */
+      font-size:clamp(17px,1.8vw,22px);
+      padding:12px 22px; border-radius:13px;
       background:var(--btn); color:#fff; text-decoration:none;
-      box-shadow:0 0 18px #ff3b73; transition:.2s transform, .2s box-shadow, .2s background;
+      box-shadow:0 0 16px #ff3b73; transition:.2s transform,.2s box-shadow,.2s background;
     }
-    .btn:hover{ transform:translateY(-1px); box-shadow:0 0 26px #ff5b8e; background:#ff1f5c }
+    .btn:hover{ transform:translateY(-1px); box-shadow:0 0 22px #ff5b8e; background:#ff1f5c }
 
-    /* на узких экранах разрешаем скролл и немного уменьшаем */
+    /* узкие экраны — разрешаем скролл и делаем чуть компактнее */
     @media (max-width: 900px){
       body{ overflow:auto }
-      .wrap{ height:auto; padding:14px 12px 40px }
-      .card{ padding:16px }
+      .wrap{ height:auto; padding:12px 10px 28px }
+      .card{ padding:12px 14px 16px }
     }
   </style>
 </head>
@@ -110,24 +87,21 @@
       <h1 id="ttl">Оплати 1 USDT (TRC-20)</h1>
       <div class="lead" id="send">Отправь ровно 1 USDT на адрес:</div>
 
-      <div id="address" class="addr" title="Нажми, чтобы скопировать">
-        TX5iuanUcs1YubXrFyDtM3L7Jvhr4vWyij
+      <div id="address" class="addr" title="Нажми, чтобы скопировать">TX5iuanUcs1YubXrFyDtM3L7Jvhr4vWyij</div>
+
+      <div class="qr-box">
+        <img id="qrimg" alt="QR code">
+        <div id="qrFallback">Не удалось загрузить QR. Нажми на адрес выше, он скопируется в буфер — можно вставить в кошелёк вручную.</div>
       </div>
 
-      <div class="qr-shell">
-        <img id="qrimg" alt="QR code"/>
-      </div>
-
-      <div class="hint" id="hint">
-        Отсканируй QR или нажми на адрес, чтобы скопировать. После перевода нажми кнопку ниже.
-      </div>
+      <div class="hint" id="hint">Отсканируй QR или нажми на адрес, чтобы скопировать. После перевода нажми кнопку ниже.</div>
 
       <button class="btn" id="checkBtn">Я перевёл(а) — проверить</button>
     </div>
   </div>
 
-  <!-- Либа QR -->
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <!-- Надёжный QR-генератор -->
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
   <script>
     const TXT = {
       ru:{home:'Главная',rules:'Правила',ttl:'Оплати 1 USDT (TRC-20)',send:'Отправь ровно 1 USDT на адрес:',hint:'Отсканируй QR или нажми на адрес, чтобы скопировать. После перевода нажми кнопку ниже.',btn:'Я перевёл(а) — проверить'},
@@ -137,23 +111,43 @@
     const ADDRESS = 'TX5iuanUcs1YubXrFyDtM3L7Jvhr4vWyij';
     const addrEl  = document.getElementById('address');
     const imgEl   = document.getElementById('qrimg');
+    const fbEl    = document.getElementById('qrFallback');
     const btn     = document.getElementById('checkBtn');
     const langSel = document.getElementById('lang');
 
-    // надёжная генерация в <img>
+    // Генерация QR через qrious -> dataURL
     function drawQR(){
-      QRCode.toDataURL(ADDRESS, { margin:1, scale:6, color:{dark:'#000000', light:'#ffffff'} },
-        (err, url) => { if(!err) imgEl.src = url; else imgEl.alt='QR error'; });
+      try{
+        const qr = new QRious({
+          value: ADDRESS,
+          size: 220, // компактный
+          background: '#fff',
+          foreground: '#000'
+        });
+        const url = qr.toDataURL('image/png');
+        imgEl.onload = () => { imgEl.style.display='block'; };
+        imgEl.onerror = () => fallbackQR();
+        imgEl.src = url;
+      }catch(e){ fallbackQR(); }
+    }
+
+    // Фолбэк — публичный PNG (на случай, если CDN не зашёл)
+    function fallbackQR(){
+      const url = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(ADDRESS);
+      imgEl.onload = () => { imgEl.style.display='block'; fbEl.style.display='none'; };
+      imgEl.onerror = () => { fbEl.style.display='flex'; };
+      imgEl.src = url;
     }
 
     // копирование адреса
     addrEl.addEventListener('click', async () => {
-      try{ await navigator.clipboard.writeText(ADDRESS);
-        addrEl.style.textShadow='0 0 18px #39f8d8'; setTimeout(()=>addrEl.style.textShadow='', 800);
+      try{
+        await navigator.clipboard.writeText(ADDRESS);
+        addrEl.style.textShadow='0 0 18px #39f8d8'; setTimeout(()=>addrEl.style.textShadow='', 700);
       }catch(_){}
     });
 
-    // переход к проверке (пока — на join)
+    // переход (пока) на join для проверки
     btn.addEventListener('click', ()=> location.href='join.html');
 
     // язык
@@ -179,12 +173,12 @@
       langSel.value = saved; applyLang(saved);
       drawQR();
 
-      // если монитор низкий — чуть уменьшим карточку (чтобы без скролла)
-      const needScale = (innerHeight < 760) && (innerWidth >= 1000);
-      if(needScale){
+      // если экран низкий — чуть уменьшим карточку
+      const lowH = window.innerHeight < 720 && window.innerWidth >= 1100;
+      if(lowH){
         const c = document.querySelector('.card');
-        c.style.transform = 'scale(.94)';
-        c.style.transformOrigin = '50% 0';
+        c.style.transform='scale(.92)';
+        c.style.transformOrigin='50% 0';
       }
     })();
   </script>
