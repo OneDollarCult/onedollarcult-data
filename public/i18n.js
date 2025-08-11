@@ -27,6 +27,7 @@
       join_title: "Регистрация",
       ph_nick: "Никнейм",
       ph_email: "Email",
+      btn_go_pay: "Отправить $1",          // ← добавлено
 
       // Оплата
       pay_title: "Оплати 1 USDT (TRC-20)",
@@ -91,6 +92,7 @@
       join_title: "Registration",
       ph_nick: "Nickname",
       ph_email: "Email",
+      btn_go_pay: "Send $1",               // ← added
 
       // Payment
       pay_title: "Pay 1 USDT (TRC-20)",
