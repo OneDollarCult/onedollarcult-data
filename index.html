@@ -6,46 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
 
-  <!-- Твой общий стиль (как было) -->
   <style>
     body { margin:0; padding:0; font-family:'Russo One', sans-serif; background: radial-gradient(circle at center,#1a0033,#000); color:#fff; }
 
-    /* ====== HEADER ====== */
-    .topbar{
-      position:relative;
-      padding:22px 20px 8px;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-    }
-    nav { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
-    nav a { color:#fff; text-decoration:none; font-size:18px; }
-
-    /* правая полка: соцсети + язык в одном flex */
-    .right {
-      position:absolute;
-      right:20px;
-      top:12px;
-      display:flex;
-      align-items:center;
-      gap:16px;
-    }
-    .social{ display:flex; gap:12px; }
-    .social a{
-      display:inline-flex; width:28px; height:28px;
-      align-items:center; justify-content:center;
-      border:1px solid #6a00ff; border-radius:8px;
-      background:#1b0433; box-shadow:0 0 8px #6a00ff55;
-    }
-    .social svg{ width:18px; height:18px; fill:#ffffff; }
-
-    .lang { display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
-    select {
-      background:#1f033d; color:#fff; border:1px solid #8000ff;
-      border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif;
-    }
-
-    /* ====== HERO ====== */
+    /* HERO и карточки статистики (без шапки — она в header-fix.css) */
     h1 { text-align:center; font-size:48px; margin:10px 0; color:#fff; text-shadow:0 0 12px #f0f; }
     .slogan { text-align:center; font-size:20px; color:#ccc; margin-bottom:30px; }
     .button {
@@ -61,28 +25,15 @@
 
     .footer { text-align:center; margin:24px 0 40px; font-size:18px; color:#bbb; text-shadow:0 0 8px #8000ff; }
 
-    /* ====== RESPONSIVE ====== */
-    @media (max-width: 820px){
-      .right{ right:12px; gap:12px; }
-      .social a{ width:26px; height:26px; }
-      .social svg{ width:16px; height:16px; }
-    }
-    @media (max-width: 599px){
-      nav a { margin:0 10px; font-size:16px; }
-      .lang span{ display:none; } /* слово «Язык/Language» скрываем для экономии места */
-      .social{ gap:8px; }
-      .social a{ width:24px; height:24px; }
-      .social svg{ width:15px; height:15px; }
-      h1{ font-size:34px; }
-      .button{ font-size:20px; padding:14px 26px; }
-      .stats{ gap:14px; }
-      .card{ min-width:210px; }
-      .footer{ font-size:16px; }
-    }
+    /* карточка победителя — локальные стили (можно было в отдельный файл, но оставлю тут для простоты) */
+    .last-winner-card { background:#1b0235; border-radius:14px; box-shadow:0 0 0 1px #8b31ff, 0 0 12px #8b31ff40; padding:14px 16px; margin:14px auto 24px; max-width:940px; }
+    .last-winner-title { font-size:18px; color:#fff; margin-bottom:8px; display:flex; align-items:center; gap:8px; text-shadow:0 0 10px #9f40ff55; }
+    .last-winner-body { font-size:16px; color:#bdb9d1; display:flex; align-items:center; gap:8px; }
+    @media (max-width:680px){ h1{ font-size:34px; } .button{ font-size:20px; padding:14px 26px; } .stats{ gap:14px; } .card{ min-width:210px; } .footer{ font-size:16px; } .last-winner-card{ padding:12px 14px; } .last-winner-title{ font-size:16px; } .last-winner-body{ font-size:14px; } }
   </style>
 
-  <!-- Наш новый стиль для блока победителя -->
-  <link rel="stylesheet" href="public/css/last-winner.css">
+  <!-- УСТОЙЧИВАЯ ШАПКА ДЛЯ ВСЕХ СТРАНИЦ -->
+  <link rel="stylesheet" href="public/css/header-fix.css">
 
   <script src="public/i18n.js"></script>
   <script src="public/stats.js" defer></script>
@@ -105,9 +56,8 @@
           <svg viewBox="0 0 24 24"><path d="M21 8.6a6.9 6.9 0 0 1-4.2-1.5v6.4a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1v3a3.6 3.6 0 1 0 2.7 3.4V2h3a6.9 6.9 0 0 0 4.1 4.1V8.6z"/></svg>
         </a>
         <a href="https://www.youtube.com/@OneDollarCult" target="_blank" aria-label="YouTube">
-          <!-- классическая «плей» в треугольнике, чтобы не путать с квадратом -->
           <svg viewBox="0 0 24 24">
-            <path d="M23 7.5a3.2 3.2 0 0 0-2.2-2.2C18.9 4.8 12 4.8 12 4.8s-6.9 0-8.8.5A3.2 3.2 0 0 0 1 7.5 39.4 39.4 0 0 0 .7 12 39.4 39.4 0 0 0 1 16.5a3.2 3.2 0 0 0 2.2 2.2c1.9.5 8.8.5 8.8.5s6.9 0 8.8-.5a3.2 3.2 0 0 0 2.2-2.2c.3-1.8.3-3.7.3-4.5 0-.8 0-2.7-.3-4.5z" />
+            <path d="M23 7.5a3.2 3.2 0 0 0-2.2-2.2C18.9 4.8 12 4.8 12 4.8s-6.9 0-8.8.5A3.2 3.2 0 0 0 1 7.5 39.4 39.4 0 0 0 .7 12 39.4 39.4 0 0 0 1 16.5a3.2 3.2 0 0 0 2.2 2.2c1.9.5 8.8.5 8.8.5s6.9 0 8.8-.5a3.2 3.2 0 0 0 2.2-2.2c.3-1.8.3-3.7.3-4.5 0-.8 0-2.7-.3-4.5z"/>
             <path d="M10 15V9l5 3-5 3z" fill="#000"/>
           </svg>
         </a>
@@ -136,28 +86,15 @@
     </div>
   </div>
 
-  <!-- НОВЫЙ аккуратный блок «Победитель прошлой недели» -->
+  <!-- Карточка победителя: красиво и компактно на мобилке -->
   <div class="last-winner-card">
-    <div class="last-winner-title">
-      👑 <span data-i18n="latest_winner">Победитель прошлой недели:</span>
-    </div>
-    <div class="last-winner-body">
-      ⏳ <span data-i18n="latest_wait">Ожидание ритуала...</span>
-    </div>
-    <!--
-    Если позже будет реальный победитель — можно подменять содержимое на такое:
-    <div class="last-winner-row">
-      <div class="last-winner-avatar" style="background-image:url(public/logo.png)"></div>
-      <div class="last-winner-name">@nickname</div>
-      <div class="last-winner-amount">+ 123 USDT</div>
-    </div>
-    -->
+    <div class="last-winner-title">👑 <span data-i18n="latest_winner">Победитель прошлой недели:</span></div>
+    <div class="last-winner-body">⏳ <span data-i18n="latest_wait">Ожидание ритуала...</span></div>
   </div>
 
   <div class="footer" id="ritual-time">...</div>
 
   <script>
-    // инициализация селектора языка
     const sel = document.getElementById('langSel');
     sel.value = LANG;
     sel.addEventListener('change', e => I18N.setLang(e.target.value));

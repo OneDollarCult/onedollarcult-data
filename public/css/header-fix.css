@@ -1,0 +1,81 @@
+/* ---- HEADER: устойчивый мобильный макет ---- */
+
+/* Базовая шапка — как у тебя, но без завязки на absolute для маленьких экранов */
+.topbar{
+  position: relative;
+  padding: 22px 20px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* меню */
+nav { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+nav a { color:#fff; text-decoration:none; font-size:18px; }
+
+/* правая полка: соцсети + язык */
+.right {
+  position:absolute;
+  right:20px;
+  top:12px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.social{ display:flex; gap:12px; }
+.social a{
+  display:inline-flex; width:28px; height:28px;
+  align-items:center; justify-content:center;
+  border:1px solid #6a00ff; border-radius:8px;
+  background:#1b0433; box-shadow:0 0 8px #6a00ff55;
+}
+.social svg{ width:18px; height:18px; fill:#ffffff; }
+
+.lang { display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
+.lang span{ display:none; } /* слова Язык/Language скрываем на всех мобилках — экономим место */
+select {
+  background:#1f033d; color:#fff; border:1px solid #8000ff;
+  border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif;
+}
+
+/* ===== Мобильная перестройка ===== */
+@media (max-width: 680px){
+  /* Переводим шапку в столбик */
+  .topbar{
+    display:flex;
+    flex-direction: column;
+    align-items:center;
+    padding: 14px 10px 4px;
+  }
+
+  /* правая панель больше НЕ absolute, чтобы не наезжала */
+  .right{
+    position: static;
+    order: 1;
+    margin: 8px 0 6px;
+    justify-content:center;
+    gap:12px;
+  }
+
+  /* соцкнопки и язык — по центру отдельной строкой */
+  .social a{ width:26px; height:26px; }
+  .social svg{ width:16px; height:16px; }
+
+  /* меню всегда отдельной строкой и по центру, шрифт меньше */
+  nav{
+    order: 2;
+    gap:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-bottom: 6px;
+  }
+  nav a{ font-size:16px; }
+}
+
+/* ещё чуть компактнее для узких iPhone */
+@media (max-width: 360px){
+  nav a{ font-size:15px; }
+  .social a{ width:24px; height:24px; }
+  .social svg{ width:15px; height:15px; }
+}
