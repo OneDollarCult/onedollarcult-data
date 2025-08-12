@@ -5,6 +5,9 @@
   <title data-i18n="title_main">OneDollarCult</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <!-- Подключаем мобильные фиксы -->
+  <link rel="stylesheet" href="public/mobile-fix.css">
+
   <style>
     body { margin:0; padding:0; font-family:'Russo One', sans-serif; background: radial-gradient(circle at center,#1a0033,#000); color:#fff; }
 
@@ -18,14 +21,14 @@
     }
     nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
 
-    /* правая полка: соцсети + язык в одном flex, чтобы не пересекались */
+    /* правая полка: соцсети + язык в одном flex */
     .right {
       position:absolute;
       right:20px;
       top:12px;
       display:flex;
       align-items:center;
-      gap:16px;            /* расстояние между соцсетями и языком */
+      gap:16px;
     }
 
     .social{ display:flex; gap:12px; }
@@ -59,7 +62,7 @@
 
     .footer { text-align:center; margin:24px 0 40px; font-size:18px; color:#bbb; text-shadow:0 0 8px #8000ff; }
 
-    /* ====== RESPONSIVE ====== */
+    /* Базовая адаптивность (детальные правки — в public/mobile-fix.css) */
     @media (max-width: 820px){
       .right{ right:12px; gap:12px; }
       .social a{ width:26px; height:26px; }
@@ -67,7 +70,7 @@
     }
     @media (max-width: 599px){
       nav a { margin:0 10px; font-size:16px; }
-      .lang span{ display:none; }                 /* экономим место — скрываем слово «Язык» */
+      .lang span{ display:none; }
       .social{ gap:8px; }
       .social a{ width:24px; height:24px; }
       .social svg{ width:15px; height:15px; }
@@ -78,6 +81,7 @@
       .footer{ font-size:16px; }
     }
   </style>
+
   <script src="public/i18n.js"></script>
   <script src="public/stats.js" defer></script>
 </head>

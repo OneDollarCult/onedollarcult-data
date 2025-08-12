@@ -1,0 +1,81 @@
+/* === MOBILE HEADER HOTFIX: соц-иконки не должны налезать на меню === */
+
+/* Шапка может переноситься на 2-ю строку */
+.topbar,
+nav.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 16px 14px 0;
+  flex-wrap: wrap;           /* даём перенос строк */
+  position: relative;
+  z-index: 5;
+}
+
+/* Контейнер ссылок меню (если есть .nav) */
+.topbar .nav,
+nav .nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Любой блок соцсетей — подхватим по самым частым названиям */
+#socials,
+.socials,
+.socbar,
+.soc-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Сами иконки — точно не absolute */
+#socials a,
+.socials a,
+.socbar a,
+.soc-links a {
+  position: relative !important;
+}
+
+/* ---------- Мобилка: переносим соцсети ПОД меню ---------- */
+@media (max-width: 900px) {
+  #socials,
+  .socials,
+  .socbar,
+  .soc-links {
+    position: static !important;
+    width: 100%;
+    justify-content: center;
+    margin-top: 6px;
+    order: 2;                /* блок идёт после пунктов меню */
+  }
+
+  .topbar,
+  nav.topbar {
+    padding-top: 10px;
+    gap: 12px;
+  }
+
+  nav a {
+    font-size: 16px;
+  }
+
+  /* Если переключатель языка был абсолютно позиционирован — делаем обычным */
+  .lang {
+    position: static !important;
+    margin-left: auto;
+  }
+}
+
+/* ---------- Десктоп: без изменений ---------- */
+@media (min-width: 901px) {
+  #socials,
+  .socials,
+  .socbar,
+  .soc-links {
+    margin-left: 8px;
+  }
+}
