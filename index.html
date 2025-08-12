@@ -5,6 +5,8 @@
   <title data-i18n="title_main">OneDollarCult</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+  <!-- Твой общий стиль (как было) -->
   <style>
     body { margin:0; padding:0; font-family:'Russo One', sans-serif; background: radial-gradient(circle at center,#1a0033,#000); color:#fff; }
 
@@ -15,13 +17,11 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      gap:8px;
-      flex-wrap:nowrap;
     }
-    nav{ display:flex; align-items:center; gap:16px; }
-    nav a { color:#fff; text-decoration:none; font-size:18px; white-space:nowrap; }
+    nav { display:flex; gap:18px; flex-wrap:wrap; justify-content:center; }
+    nav a { color:#fff; text-decoration:none; font-size:18px; }
 
-    /* правая полка: соцсети + язык */
+    /* правая полка: соцсети + язык в одном flex */
     .right {
       position:absolute;
       right:20px;
@@ -59,10 +59,6 @@
     .card { background:#1f033d; padding:18px 24px; border-radius:12px; border:1px solid #8000ff; box-shadow:0 0 12px #8000ff33; min-width:240px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
     #stat-players { display:flex; align-items:center; justify-content:center; }
 
-    /* победитель */
-    .winner-title{ font-size:20px; margin-bottom:8px; text-align:center; }
-    .winner-value{ font-size:22px; color:#eae6ff; opacity:.95; text-align:center; }
-
     .footer { text-align:center; margin:24px 0 40px; font-size:18px; color:#bbb; text-shadow:0 0 8px #8000ff; }
 
     /* ====== RESPONSIVE ====== */
@@ -71,47 +67,23 @@
       .social a{ width:26px; height:26px; }
       .social svg{ width:16px; height:16px; }
     }
-    /* мобильная раскладка: 1-я строка соцсети по центру, 2-я строка меню в одну линию */
     @media (max-width: 599px){
-      .topbar{
-        padding:14px 12px 6px;
-        flex-direction:column;
-        align-items:center;
-        gap:10px;
-      }
-      /* делаем соцсети первой строкой */
-      .right{
-        position:static;
-        order:1;
-        width:100%;
-        justify-content:center;
-      }
-      nav{
-        order:2;
-        gap:12px;
-        flex-wrap:nowrap;
-      }
-      nav a { font-size:15px; } /* поджали, чтобы влезло в одну линию */
-      .lang span{ display:none; } /* слово «Язык» скрываем */
-      .social{ gap:10px; }
-      .social a{ width:26px; height:26px; }
+      nav a { margin:0 10px; font-size:16px; }
+      .lang span{ display:none; } /* слово «Язык/Language» скрываем для экономии места */
+      .social{ gap:8px; }
+      .social a{ width:24px; height:24px; }
       .social svg{ width:15px; height:15px; }
-
-      h1{ font-size:38px; }
-      .button{ font-size:22px; padding:14px 28px; }
-      .stats{ gap:16px; }
+      h1{ font-size:34px; }
+      .button{ font-size:20px; padding:14px 26px; }
+      .stats{ gap:14px; }
       .card{ min-width:210px; }
-
-      .winner-title{ font-size:18px; }
-      .winner-value{ font-size:20px; }
       .footer{ font-size:16px; }
     }
-    /* совсем узкие (старые iPhone SE и т.п.) — ещё чутка меньше меню */
-    @media (max-width: 380px){
-      nav{ gap:10px; }
-      nav a{ font-size:14px; }
-    }
   </style>
+
+  <!-- Наш новый стиль для блока победителя -->
+  <link rel="stylesheet" href="public/css/last-winner.css">
+
   <script src="public/i18n.js"></script>
   <script src="public/stats.js" defer></script>
 </head>
@@ -124,20 +96,20 @@
       <a href="philosophy.html" data-i18n="nav_philosophy">Философия</a>
     </nav>
 
-    <!-- соцсети + язык -->
     <div class="right">
       <div class="social">
         <a href="https://x.com/OneDollarCult" target="_blank" aria-label="X">
-          <!-- X -->
           <svg viewBox="0 0 24 24"><path d="M18 2h3l-7.5 8.6L22 22h-7l-4.6-6L5 22H2l8.1-9.3L2 2h7l4.2 5.6L18 2z"/></svg>
         </a>
         <a href="https://www.tiktok.com/@onedollarcult" target="_blank" aria-label="TikTok">
-          <!-- TikTok -->
           <svg viewBox="0 0 24 24"><path d="M21 8.6a6.9 6.9 0 0 1-4.2-1.5v6.4a6.5 6.5 0 1 1-6.5-6.5c.3 0 .6 0 .9.1v3a3.6 3.6 0 1 0 2.7 3.4V2h3a6.9 6.9 0 0 0 4.1 4.1V8.6z"/></svg>
         </a>
         <a href="https://www.youtube.com/@OneDollarCult" target="_blank" aria-label="YouTube">
-          <!-- YouTube (классический play в «телевизоре») -->
-          <svg viewBox="0 0 24 24"><path d="M23.5 6.2c-.2-1.3-1.3-2.4-2.6-2.6C18.6 3 12 3 12 3s-6.6 0-8.9.6C1.8 4 .7 5 .5 6.2 0 8.5 0 12 0 12s0 3.5.5 5.8c.2 1.3 1.3 2.4 2.6 2.6C5.4 21 12 21 12 21s6.6 0 8.9-.6c1.3-.2 2.4-1.3 2.6-2.6.5-2.3.5-5.8.5-5.8s0-3.5-.5-5.8zM9.6 15.5V8.5l6 3.5-6 3.5z"/></svg>
+          <!-- классическая «плей» в треугольнике, чтобы не путать с квадратом -->
+          <svg viewBox="0 0 24 24">
+            <path d="M23 7.5a3.2 3.2 0 0 0-2.2-2.2C18.9 4.8 12 4.8 12 4.8s-6.9 0-8.8.5A3.2 3.2 0 0 0 1 7.5 39.4 39.4 0 0 0 .7 12 39.4 39.4 0 0 0 1 16.5a3.2 3.2 0 0 0 2.2 2.2c1.9.5 8.8.5 8.8.5s6.9 0 8.8-.5a3.2 3.2 0 0 0 2.2-2.2c.3-1.8.3-3.7.3-4.5 0-.8 0-2.7-.3-4.5z" />
+            <path d="M10 15V9l5 3-5 3z" fill="#000"/>
+          </svg>
         </a>
       </div>
       <div class="lang">
@@ -162,18 +134,33 @@
       <div id="stat-bank">💰 —</div>
       <div style="margin-top:8px; font-size:14px; color:#aaa;" data-i18n="bank_hint">Победитель получит 50% от банка</div>
     </div>
-    <div class="card">
-      <div class="winner-title" data-i18n="latest_winner">👑 Победитель прошлой недели:</div>
-      <div id="latest-winner" class="winner-value" data-i18n="latest_wait">Ожидание ритуала...</div>
+  </div>
+
+  <!-- НОВЫЙ аккуратный блок «Победитель прошлой недели» -->
+  <div class="last-winner-card">
+    <div class="last-winner-title">
+      👑 <span data-i18n="latest_winner">Победитель прошлой недели:</span>
     </div>
+    <div class="last-winner-body">
+      ⏳ <span data-i18n="latest_wait">Ожидание ритуала...</span>
+    </div>
+    <!--
+    Если позже будет реальный победитель — можно подменять содержимое на такое:
+    <div class="last-winner-row">
+      <div class="last-winner-avatar" style="background-image:url(public/logo.png)"></div>
+      <div class="last-winner-name">@nickname</div>
+      <div class="last-winner-amount">+ 123 USDT</div>
+    </div>
+    -->
   </div>
 
   <div class="footer" id="ritual-time">...</div>
 
   <script>
     // инициализация селектора языка
-    document.getElementById('langSel').value = LANG;
-    document.getElementById('langSel').addEventListener('change', e => I18N.setLang(e.target.value));
+    const sel = document.getElementById('langSel');
+    sel.value = LANG;
+    sel.addEventListener('change', e => I18N.setLang(e.target.value));
   </script>
 </body>
 </html>

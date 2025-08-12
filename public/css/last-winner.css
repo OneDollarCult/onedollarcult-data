@@ -1,0 +1,65 @@
+/* -------- Last winner card -------- */
+
+.last-winner-card {
+  background: #1b0235;
+  border-radius: 14px;
+  box-shadow: 0 0 0 1px #8b31ff, 0 0 12px #8b31ff40;
+  padding: 14px 16px;
+  margin: 14px auto 24px;
+  max-width: 940px;
+}
+
+.last-winner-title {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 10px #9f40ff55;
+}
+
+.last-winner-body {
+  font-size: 16px;
+  color: #bdb9d1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Если когда-нибудь будет победитель с аватаром */
+.last-winner-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 12px;
+}
+
+.last-winner-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #8b31ff;
+  background: #000 center/cover no-repeat;
+  box-shadow: 0 0 10px #8b31ff55;
+}
+
+.last-winner-name {
+  color: #fff;
+  font-size: 16px;
+}
+
+.last-winner-amount {
+  color: #39f8d8;
+  font-size: 16px;
+}
+
+/* ------- Mobile tweaks ------- */
+@media (max-width: 680px) {
+  .last-winner-card { padding: 12px 14px; margin: 12px auto 20px; }
+  .last-winner-title { font-size: 16px; }
+  .last-winner-body { font-size: 14px; }
+  .last-winner-row { grid-template-columns: 42px 1fr auto; gap: 10px; }
+  .last-winner-avatar { width: 42px; height: 42px; }
+  .last-winner-name, .last-winner-amount { font-size: 14px; }
+}
