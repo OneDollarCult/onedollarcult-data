@@ -1,21 +1,55 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title data-i18n="nav_philosophy">Философия — OneDollarCult</title>
+  <meta charset="UTF-8" />
+  <title data-i18n="ph_title">Философия — OneDollarCult</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
   <style>
-    body { background: radial-gradient(circle at center, #14022b, #000); color:#fff; font-family:'Russo One', sans-serif; margin:0; }
-    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
-    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
-    .lang { position:absolute; right:20px; top:16px; display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
-    select { background:#1f033d; color:#fff; border:1px solid #8000ff; border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif; }
+    :root{ --violet:#8b31ff; --card:#1b0235; --btn:#ff0044; }
+    *{ box-sizing:border-box; }
+    html,body{ height:100% }
+    body{
+      margin:0; color:#fff; background: radial-gradient(1100px 520px at 50% -10%, #21004a 0%, #0b0016 60%, #000 100%);
+      font-family:'Russo One', system-ui, arial, sans-serif;
+    }
 
-    .wrap{ text-align:center; padding:25px 20px; }
-    .box { background:#1f033d; padding:20px 25px; border-radius:12px; display:inline-block; box-shadow:0 0 15px #8000ff; max-width:650px; }
-    h2 { text-shadow:0 0 8px #f0f; margin:0 0 10px; font-size:24px; text-align:center; }
-    p { line-height:1.4; color:#ddd; font-size:14px; margin-bottom:12px; text-align:left; }
+    /* TOPBAR */
+    .topbar{ position:relative; padding:22px 16px 10px; display:flex; justify-content:center; align-items:center; }
+    nav{ display:flex; gap:18px; align-items:center; justify-content:center; }
+    nav a{ color:#fff; text-decoration:none; font-size:20px }
+    nav a:hover{ text-shadow:0 0 10px #fff3 }
+    .right{ position:absolute; top:14px; right:16px; display:flex; align-items:center; gap:10px; }
+    .lang{ display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
+    .lang span{ display:none } /* просили убрать слово “Язык/Language” */
+    select{ background:#1f033d; color:#fff; border:1px solid #7740ff; border-radius:9px; padding:6px 10px; font-family:'Russo One', sans-serif; }
+
+    /* CONTENT */
+    .wrap{ max-width:1100px; margin:16px auto 60px; padding:0 14px; }
+    .card{
+      background:var(--card);
+      border-radius:18px;
+      box-shadow:0 0 0 1px var(--violet), 0 0 22px #8b31ff40, inset 0 0 60px #0005;
+      padding:22px 18px 26px;
+    }
+    h1{
+      margin:0 0 16px; line-height:1.15;
+      font-size:clamp(26px,5.8vw,44px);
+      text-shadow:0 0 14px #f0f;
+    }
+    .p{
+      font-size:clamp(16px,3.8vw,24px);
+      color:#d7d2ea; line-height:1.45;
+      margin:14px 0;
+    }
+
+    /* MOBILE */
+    @media (max-width: 680px){
+      nav{ gap:14px }
+      nav a{ font-size:18px }
+      .right{ top:10px; right:12px }
+      select{ padding:6px 8px }
+    }
   </style>
   <script src="public/i18n.js"></script>
 </head>
@@ -24,21 +58,33 @@
     <nav>
       <a href="index.html" data-i18n="nav_home">Главная</a>
       <a href="rules.html" data-i18n="nav_rules">Правила</a>
+      <a href="winners.html" data-i18n="nav_winners">Победители</a>
     </nav>
-    <div class="lang"><span data-i18n="lang_label">Язык</span>
-      <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+    <div class="right">
+      <div class="lang">
+        <span data-i18n="lang_label">Язык</span>
+        <select id="langSel">
+          <option value="ru">RU</option>
+          <option value="en">EN</option>
+        </select>
+      </div>
     </div>
   </div>
 
   <div class="wrap">
-    <div class="box">
-      <h2 data-i18n="ph_title">Легенда о Монете</h2>
-      <p data-i18n="ph_p1"></p>
-      <p data-i18n="ph_p2"></p>
-      <p data-i18n="ph_p3"></p>
+    <div class="card">
+      <h1 data-i18n="ph_title">Легенда о Монете</h1>
+      <div class="p" data-i18n="ph_p1">…</div>
+      <div class="p" data-i18n="ph_p2">…</div>
+      <div class="p" data-i18n="ph_p3">…</div>
     </div>
   </div>
 
-  <script>langSel.value=LANG;langSel.addEventListener('change',e=>I18N.setLang(e.target.value));</script>
+  <script>
+    // селектор языка
+    const sel = document.getElementById('langSel');
+    sel.value = LANG;
+    sel.addEventListener('change', e=>I18N.setLang(e.target.value));
+  </script>
 </body>
 </html>

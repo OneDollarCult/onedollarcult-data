@@ -1,48 +1,78 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title data-i18n="winners_title">Winners — OneDollarCult</title>
+  <meta charset="UTF-8" />
+  <title data-i18n="winners_title">Победители — OneDollarCult</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
   <style>
-    body{ margin:0; padding:0; font-family:'Russo One',sans-serif; color:#fff; background: radial-gradient(circle at center,#14022b,#000); }
-
-    /* шапка как на главной */
-    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
-    nav a{ margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
-    .right{ position:absolute; right:20px; top:12px; display:flex; align-items:center; gap:16px; }
-    .lang{ display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
-    select{ background:#1f033d; color:#fff; border:1px solid #8000ff; border-radius:8px; padding:6px 10px; font-family:'Russo One',sans-serif; }
-
-    .container{ margin:20px auto; width:95%; max-width:960px; background:#1f033d; border-radius:12px; padding:24px 20px; box-shadow:0 0 15px #8000ff; text-align:left; }
-    h2{ margin:0 0 10px; text-shadow:0 0 8px #f0f; text-align:center; }
-
-    .toolbar{ display:flex; justify-content:space-between; align-items:center; margin:8px 2px 14px; color:#cfcbe8; font-size:14px; }
-    #refresh-btn{
-      cursor:pointer; border:0; border-radius:10px; padding:10px 16px;
-      background:#ff0044; color:#fff; box-shadow:0 0 10px #ff0044;
-      font-family:'Russo One',sans-serif; font-size:14px;
+    :root{ --violet:#8b31ff; --card:#1b0235; --btn:#ff0044; }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0; color:#fff; background: radial-gradient(1100px 520px at 50% -10%, #21004a 0%, #0b0016 60%, #000 100%);
+      font-family:'Russo One', system-ui, arial, sans-serif;
     }
-    #refresh-btn:hover{ background:#ff2266; box-shadow:0 0 14px #ff2266; }
 
-    .table-wrap{ overflow:auto; border:1px solid #6a00ff; border-radius:10px; box-shadow: inset 0 0 12px #6a00ff55; }
-    table{ width:100%; border-collapse:separate; border-spacing:0; min-width:720px; }
-    thead th{ position:sticky; top:0; z-index:1; background:#2b0a53; color:#fff; font-weight:normal; border-bottom:1px solid #6a00ff; padding:12px 10px; text-align:left; }
-    tbody td{ padding:10px; border-bottom:1px solid #3b1469; vertical-align:middle; }
-    tbody tr:nth-child(odd){ background:#230847; }
-    tbody tr:nth-child(even){ background:#1d063b; }
-    tbody tr:hover{ background:#3a0a70; }
-    .col-avatar{ width:72px; }
-    .avatar{ width:44px; height:44px; border-radius:50%; border:2px solid #8a40ff; box-shadow:0 0 8px #8a40ff88; object-fit:cover; background:#000; }
-    .empty{ color:#aaa; text-align:center; padding:18px; }
-    .amount{ color:#00ffcc; }
-    .date{ color:#cfcbe8; font-size:14px; }
+    /* TOPBAR (как на index) */
+    .topbar{ position:relative; padding:22px 16px 10px; display:flex; justify-content:center; align-items:center; }
+    nav{ display:flex; gap:18px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    nav a{ color:#fff; text-decoration:none; font-size:20px }
+    nav a:hover{ text-shadow:0 0 10px #fff3 }
+    .right{ position:absolute; top:14px; right:16px; display:flex; align-items:center; gap:10px; }
+    .lang span{ display:none } /* убираем слово */
+    select{ background:#1f033d; color:#fff; border:1px solid #7740ff; border-radius:9px; padding:6px 10px; font-family:'Russo One', sans-serif; }
 
-    @media (max-width:599px){
-      .toolbar{ flex-direction:column; align-items:flex-start; gap:6px; }
-      #refresh-btn{ width:100%; }
-      .lang span{ display:none; }
+    /* LAYOUT */
+    .wrap{ max-width:1100px; margin:8px auto 60px; padding:0 14px; }
+    .panel{
+      background:var(--card);
+      border-radius:18px;
+      box-shadow:0 0 0 1px var(--violet), 0 0 22px #8b31ff40;
+      padding:18px 16px 22px;
+    }
+    h1{
+      margin:8px 6px 14px; line-height:1.1;
+      font-size:clamp(24px,6.2vw,44px);
+      text-shadow:0 0 14px #f0f;
+      text-align:center;
+    }
+    .meta{
+      margin:0 6px 14px; color:#cfcbe8; font-size:clamp(14px,3.2vw,18px);
+    }
+    .btn{
+      display:block; width:100%; max-width:520px; margin:0 auto 14px; text-align:center;
+      background:var(--btn); color:#fff; text-decoration:none; border:0; cursor:pointer;
+      font-family:'Russo One', system-ui, arial, sans-serif;
+      font-size:clamp(18px,4.2vw,22px); padding:12px 18px; border-radius:14px;
+      box-shadow:0 0 16px #ff3b73; transition:.2s;
+    }
+    .btn:hover{ background:#ff1f5c; box-shadow:0 0 22px #ff5b8e }
+
+    /* TABLE WRAP: чтобы на мобилках ничего не «ехало» */
+    .table-wrap{
+      margin-top:10px; background:#13022c; border-radius:14px; overflow:hidden;
+      box-shadow: inset 0 0 0 1px #7a27ff, 0 0 14px #7a27ff55;
+    }
+    .scroll-x{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    table{ width:100%; border-collapse:collapse; min-width:640px; } /* min-width — чтобы колонки читались; контейнер скроллится */
+    thead th{
+      text-align:left; padding:14px 16px;
+      font-size:clamp(14px,3.6vw,18px); color:#dcd7f2; border-bottom:1px solid #4c248a;
+    }
+    tbody td{
+      padding:14px 16px; font-size:clamp(14px,3.6vw,18px); border-bottom:1px solid #30115f;
+      color:#fff;
+    }
+    tbody tr:last-child td{ border-bottom:0 }
+
+    .empty{ padding:16px; color:#bdb9d1; font-size:clamp(14px,3.8vw,18px) }
+
+    /* MOBILE TWEAKS */
+    @media (max-width: 680px){
+      nav{ gap:14px }
+      nav a{ font-size:18px }
+      .right{ top:10px; right:12px }
+      .meta{ text-align:left }
     }
   </style>
   <script src="public/i18n.js"></script>
@@ -50,91 +80,64 @@
 <body>
   <div class="topbar">
     <nav>
-      <a href="index.html" data-i18n="nav_home">Home</a>
-      <a href="rules.html" data-i18n="nav_rules">Rules</a>
-      <a href="philosophy.html" data-i18n="nav_philosophy">Philosophy</a>
+      <a href="index.html" data-i18n="nav_home">Главная</a>
+      <a href="rules.html" data-i18n="nav_rules">Правила</a>
+      <a href="philosophy.html" data-i18n="nav_philosophy">Философия</a>
     </nav>
     <div class="right">
       <div class="lang">
-        <span data-i18n="lang_label">Language</span>
-        <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+        <span data-i18n="lang_label">Язык</span>
+        <select id="langSel">
+          <option value="ru">RU</option>
+          <option value="en">EN</option>
+        </select>
       </div>
     </div>
   </div>
 
-  <div class="container">
-    <h2 data-i18n="winners_title">Ritual Winners</h2>
-    <div class="toolbar">
-      <div class="count" id="count" data-i18n="total_winners" data-n="0">Total winners: 0</div>
-      <button id="refresh-btn" data-i18n="refresh_btn">Refresh</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th class="col-avatar" data-i18n="col_avatar">Avatar</th>
-            <th data-i18n="col_user">Participant</th>
-            <th data-i18n="col_amount">Prize amount</th>
-            <th data-i18n="col_date">Date</th>
-          </tr>
-        </thead>
-        <tbody id="rows">
-          <tr><td colspan="4" class="empty">...</td></tr>
-        </tbody>
-      </table>
+  <div class="wrap">
+    <div class="panel">
+      <h1 data-i18n="winners_title">Победители Ритуалов</h1>
+      <div class="meta"><span data-i18n="total_winners" data-n="0">Всего победителей: 0</span></div>
+
+      <button class="btn" id="refreshBtn" data-i18n="refresh_btn">Обновить</button>
+
+      <div class="table-wrap">
+        <div class="scroll-x">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="col_avatar">Аватар</th>
+                <th data-i18n="col_user">Участник</th>
+                <th data-i18n="col_amount">Сумма выигрыша</th>
+                <th data-i18n="col_date">Дата</th>
+              </tr>
+            </thead>
+            <tbody id="winnersBody">
+              <tr id="winnersEmpty"><td class="empty" colspan="4" data-i18n="winners_none">Ещё не было ритуалов.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     // язык
-    const langSel = document.getElementById('langSel');
-    langSel.value = LANG;
-    langSel.addEventListener('change', e => I18N.setLang(e.target.value));
+    const sel = document.getElementById('langSel');
+    sel.value = LANG;
+    sel.addEventListener('change', e=>I18N.setLang(e.target.value));
 
-    const FALLBACK_AVATAR = 'public/logo.png';
-
-    function fmtDateMSK(iso){
-      const loc = I18N.lang()==='ru'?'ru-RU':'en-US';
-      try{
-        const d = new Date(iso);
-        return d.toLocaleString(loc, { timeZone:'Europe/Moscow', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' }) + ' (UTC+3)';
-      }catch{ return iso; }
+    // Если у вас уже есть логика подгрузки победителей — оставьте её.
+    // Ниже — мягкий «крючок»: если глобальная функция loadWinners существует, вызовем её.
+    if (typeof window.loadWinners === 'function') {
+      window.loadWinners({
+        refreshBtn: document.getElementById('refreshBtn'),
+        totalLabel: document.querySelector('.meta [data-i18n="total_winners"]'),
+        body: document.getElementById('winnersBody'),
+        empty: document.getElementById('winnersEmpty')
+      });
     }
-
-    async function loadWinners(){
-      const tbody = document.getElementById('rows');
-      tbody.innerHTML = `<tr><td colspan="4" class="empty">...</td></tr>`;
-
-      if(location.protocol==='file:'){
-        document.getElementById('count').textContent = I18N.t('total_winners',{n:0});
-        tbody.innerHTML = `<tr><td colspan="4" class="empty">${I18N.t('winners_none')}</td></tr>`;
-        return;
-      }
-
-      try{
-        const r = await fetch('/api/winners');
-        const arr = await r.json();
-        document.getElementById('count').textContent = I18N.t('total_winners',{n:arr.length});
-        if(!arr.length){
-          tbody.innerHTML = `<tr><td colspan="4" class="empty">${I18N.t('winners_none')}</td></tr>`;
-          return;
-        }
-        tbody.innerHTML = arr.map(w=>`
-          <tr>
-            <td class="col-avatar"><img class="avatar" src="${w.avatar||FALLBACK_AVATAR}" alt=""></td>
-            <td>${w.nickname||'—'}</td>
-            <td class="amount">${(w.bankHalf!=null)?`${w.bankHalf} USDT`:'—'}</td>
-            <td class="date">${w.date?fmtDateMSK(w.date):'—'}</td>
-          </tr>`).join('');
-      }catch{
-        document.getElementById('count').textContent = I18N.t('total_winners',{n:0});
-        tbody.innerHTML = `<tr><td colspan="4" class="empty">${I18N.t('winners_error')}</td></tr>`;
-      }
-    }
-
-    document.getElementById('refresh-btn').addEventListener('click', loadWinners);
-    document.addEventListener('DOMContentLoaded', loadWinners);
-    window.addEventListener('langchange', loadWinners);
   </script>
 </body>
 </html>
