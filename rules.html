@@ -5,13 +5,25 @@
   <title data-i18n="rules_title">Правила — OneDollarCult</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
+  <script>
+    // Ставим язык до рендера, чтобы не мигало
+    (function(){
+      try {
+        var savedLang = localStorage.getItem('odc_lang');
+        if (!savedLang) savedLang = (navigator.language||'en').toLowerCase().startsWith('ru') ? 'ru' : 'en';
+        window.LANG = savedLang;
+        document.documentElement.lang = savedLang;
+      } catch(e) {
+        window.LANG = 'ru';
+        document.documentElement.lang = 'ru';
+      }
+    })();
+  </script>
   <style>
     :root{ --bg2:#1a0033; --vio:#8000ff; --card:#1f033d; --text:#fff; --muted:#d9d6ea; }
     *{ box-sizing:border-box }
     body{
-      margin:0; 
-      color:var(--text); 
-      font-family:'Russo One', sans-serif;
+      margin:0; color:var(--text); font-family:'Russo One', sans-serif;
       background: radial-gradient(1100px 520px at 50% -10%, #21004a 0%, #0b0016 60%, #000 100%);
     }
     .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; row-gap:8px; }
@@ -20,13 +32,10 @@
     .right{ position:absolute; right:20px; top:12px; display:flex; align-items:center; gap:12px }
     .lang span{ display:none }
     select{
-      background:#1f033d; 
-      color:#fff; 
-      border:1px solid var(--vio);
-      border-radius:8px; 
-      padding:6px 10px; 
-      font-family:'Russo One', sans-serif;
+      background:#1f033d; color:#fff; border:1px solid var(--vio);
+      border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif;
     }
+
     .box{
       background:var(--card);
       border:1px solid var(--vio);
@@ -39,19 +48,19 @@
     h1{
       margin:0 0 20px;
       text-shadow:0 0 12px #f0f;
-      font-size: 32px; /* единый масштаб с другими страницами */
+      font-size:32px;        /* единый масштаб */
       line-height:1.2;
       text-align:center;
     }
-    p, li{
+    li, p{
       color:var(--muted);
-      font-size: 18px; /* как на других страницах */
-      line-height:1.4; /* одинаковая высота строк */
+      font-size:18px;        /* единый размер текста */
+      line-height:1.4;       /* единая высота строки */
     }
     ul{ margin:0; padding-left:20px }
     @media (max-width:599px){
       .right{ position:static; order:3; }
-      .box{ max-width:92%; padding: 16px; }
+      .box{ max-width:92%; padding:16px; }
     }
   </style>
   <script src="public/i18n.js"></script>
@@ -75,11 +84,11 @@
   <div class="box">
     <h1 data-i18n="rules_h1">Правила</h1>
     <ul>
-      <li data-i18n="rules_1">Каждую неделю проходит один ритуал с одним победителем.</li>
-      <li data-i18n="rules_2">Вход — $1 в USDT (TRC-20). Половина банка уходит победителю.</li>
-      <li data-i18n="rules_3">До ритуала на главной виден таймер. После — имя победителя и сумма.</li>
-      <li data-i18n="rules_4">Факт участия фиксируется после подтверждения транзакции.</li>
-      <li data-i18n="rules_5">Рандомайзер выбирает победителя среди участников недели.</li>
+      <li data-i18n="rules_1">Раз в семь дней священный механизм пробуждается — и происходит Ритуал Избрания. Лишь один из верных получает благословение судьбы.</li>
+      <li data-i18n="rules_2">Чтобы войти в Круг, ты приносишь жертву в размере $1 в USDT (TRC-20). Половина накопленного Сокровища уходит Избранному.</li>
+      <li data-i18n="rules_3">До часа Ритуала на алтаре Главной страницы горит Огненный Таймер. Когда время придёт — он откроет имя и дары победителя.</li>
+      <li data-i18n="rules_4">Твой обет считается принятым лишь после того, как цепь блокчейна подтвердит жертвоприношение.</li>
+      <li data-i18n="rules_5">Избранник определяется древним Колесом Судьбы — случайным выбором без вмешательства руки человеческой.</li>
     </ul>
   </div>
 

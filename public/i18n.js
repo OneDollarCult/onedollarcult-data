@@ -37,14 +37,14 @@
       join_no_file: "Файл не выбран",
       join_fill_alert: "Заполни ник и email",
 
-      // Rules
+      // Rules (обновлённые тексты)
       rules_title: "Правила — OneDollarCult",
       rules_h1: "Правила",
-      rules_1: "Каждую неделю проходит один ритуал с одним победителем.",
-      rules_2: "Вход — $1 в USDT (TRC-20). Половина банка уходит победителю.",
-      rules_3: "До ритуала на главной виден таймер. После — имя победителя и сумма.",
-      rules_4: "Факт участия фиксируется после подтверждения транзакции.",
-      rules_5: "Рандомайзер выбирает победителя среди участников недели.",
+      rules_1: "Раз в семь дней священный механизм пробуждается — и происходит Ритуал Избрания. Лишь один из верных получает благословение судьбы.",
+      rules_2: "Чтобы войти в Круг, ты приносишь жертву в размере $1 в USDT (TRC-20). Половина накопленного Сокровища уходит Избранному.",
+      rules_3: "До часа Ритуала на алтаре Главной страницы горит Огненный Таймер. Когда время придёт — он откроет имя и дары победителя.",
+      rules_4: "Твой обет считается принятым лишь после того, как цепь блокчейна подтвердит жертвоприношение.",
+      rules_5: "Избранник определяется древним Колесом Судьбы — случайным выбором без вмешательства руки человеческой.",
 
       // Winners
       winners_title: "Победители — OneDollarCult",
@@ -93,14 +93,14 @@
       join_no_file: "No file chosen",
       join_fill_alert: "Fill nickname and email",
 
-      // Rules
+      // Rules (updated mystic text)
       rules_title: "Rules — OneDollarCult",
       rules_h1: "Rules",
-      rules_1: "There is one ritual every week with one winner.",
-      rules_2: "Entry — $1 in USDT (TRC-20). Half of the pool goes to the winner.",
-      rules_3: "Before the ritual the timer is shown on the home page. After — winner’s name and amount.",
-      rules_4: "Participation is recorded after the transaction confirmation.",
-      rules_5: "A randomizer picks the winner among the week’s participants.",
+      rules_1: "Every seven days the sacred mechanism awakens — and the Ritual of Choosing begins. Only one devotee receives fate’s blessing.",
+      rules_2: "To enter the Circle, you offer a tribute of $1 in USDT (TRC-20). Half of the gathered Treasure goes to the Chosen One.",
+      rules_3: "Until the hour of the Ritual, a Burning Timer glows on the Home altar. When the moment comes, it reveals the winner’s name and reward.",
+      rules_4: "Your vow is accepted only after the blockchain confirms your offering.",
+      rules_5: "The Chosen One is decided by the ancient Wheel of Fate — a random selection with no human interference.",
 
       // Winners
       winners_title: "Winners — OneDollarCult",
@@ -141,7 +141,6 @@
       if (el.tagName.toLowerCase() === "title") {
         document.title = out;               // для <title data-i18n="...">
       } else if (el.hasAttribute("data-i18n-ph")) {
-        // для плейсхолдеров (если элемент одновременно помечен и data-i18n, и data-i18n-ph)
         el.setAttribute("placeholder", out);
       } else {
         el.textContent = out;
@@ -155,10 +154,8 @@
       if (val != null) el.setAttribute("placeholder", val);
     });
 
-    // Синхронизируем селекторы языка на странице
-    document.querySelectorAll("#langSel").forEach(s => {
-      if (s.value !== lang) s.value = lang;
-    });
+    // Синхронизация селекторов языка
+    document.querySelectorAll("#langSel").forEach(s => { if (s.value !== lang) s.value = lang; });
   }
 
   const I18N = {
@@ -169,7 +166,6 @@
       w.LANG = lang;
       document.documentElement.lang = lang;
       apply(lang);
-      // Сообщаем странице, что язык поменялся (на случай локальных обработчиков)
       try { window.dispatchEvent(new Event("langchange")); } catch(e) {}
     },
     apply
@@ -183,7 +179,11 @@
       start = saved || ((navigator.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en");
     } catch(e) {}
     w.LANG = w.LANG || start;
-    document.addEventListener("DOMContentLoaded", () => apply(w.LANG));
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => apply(w.LANG));
+    } else {
+      apply(w.LANG);
+    }
   })();
 
   w.I18N = I18N;
