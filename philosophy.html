@@ -10,18 +10,18 @@
     *{box-sizing:border-box}
     body{
       margin:0; color:var(--text); font-family:'Russo One', sans-serif;
-      background: radial-gradient(circle at center, var(--bg2), #000 70%);
+      background: radial-gradient(1100px 520px at 50% -10%, #21004a 0%, #0b0016 60%, #000 100%);
     }
     .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
     nav{display:flex; gap:24px; flex-wrap:wrap; justify-content:center}
     nav a{color:#fff; text-decoration:none; font-size:18px}
     .right{ position:absolute; right:20px; top:12px; display:flex; align-items:center; gap:12px }
-    .lang{ display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px }
+    .lang span{ display:none }
     select{
       background:#1f033d; color:#fff; border:1px solid var(--vio);
       border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif;
     }
-    @media (max-width:599px){ .lang span{display:none} }
+
     .ph-box{
       background:var(--card);
       border:1px solid var(--vio);
@@ -36,6 +36,7 @@
       text-shadow:0 0 12px #f0f;
       font-size: clamp(26px, 4.2vw, 46px);
       line-height:1.1;
+      text-align:center;
     }
     .ph-box p{
       margin:0 0 clamp(10px, 2vw, 16px);
@@ -43,7 +44,6 @@
       font-size: clamp(16px, 1.5vw, 22px);
       line-height:1.5;
     }
-    @media (min-width:1600px){ .ph-box{ max-width:1040px } }
   </style>
   <script src="public/i18n.js"></script>
 </head>
@@ -53,6 +53,7 @@
       <a href="index.html" data-i18n="nav_home">Главная</a>
       <a href="rules.html" data-i18n="nav_rules">Правила</a>
       <a href="winners.html" data-i18n="nav_winners">Победители</a>
+      <a href="philosophy.html" data-i18n="nav_philosophy">Философия</a>
     </nav>
     <div class="right">
       <div class="lang">
@@ -71,7 +72,7 @@
 
   <script>
     const sel = document.getElementById('langSel');
-    sel.value = typeof LANG !== 'undefined' ? LANG : 'ru';
+    sel.value = window.LANG || 'ru';
     sel.addEventListener('change', e => I18N.setLang(e.target.value));
   </script>
 </body>

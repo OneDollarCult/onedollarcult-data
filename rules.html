@@ -1,22 +1,58 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title data-i18n="nav_rules">Правила — OneDollarCult</title>
+  <meta charset="UTF-8" />
+  <title data-i18n="rules_title">Правила — OneDollarCult</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet" />
   <style>
-    body { background: radial-gradient(circle at center, #14022b, #000); color:#fff; font-family:'Russo One', sans-serif; margin:0; }
-    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
-    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
-    .lang { position:absolute; right:20px; top:16px; display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
-    select { background:#1f033d; color:#fff; border:1px solid #8000ff; border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif; }
-
-    .container { text-align:center; padding:30px 20px; }
-    .box { background:#1f033d; padding:25px 30px; border-radius:12px; display:inline-block; box-shadow:0 0 15px #8000ff; max-width:700px; }
-    h1 { text-shadow:0 0 8px #f0f; margin:0 0 12px; font-size:26px; }
-    ul { text-align:left; margin:0 auto; max-width:600px; padding-left:20px; font-size:15px; }
-    li { margin:8px 0; line-height:1.45; }
+    :root{ --bg2:#1a0033; --vio:#8000ff; --card:#1f033d; --text:#fff; --muted:#d9d6ea; }
+    *{ box-sizing:border-box }
+    body{
+      margin:0; 
+      color:var(--text); 
+      font-family:'Russo One', sans-serif;
+      background: radial-gradient(1100px 520px at 50% -10%, #21004a 0%, #0b0016 60%, #000 100%);
+    }
+    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; row-gap:8px; }
+    nav{ display:flex; gap:24px; flex-wrap:wrap; justify-content:center }
+    nav a{ color:#fff; text-decoration:none; font-size:18px; white-space:nowrap; }
+    .right{ position:absolute; right:20px; top:12px; display:flex; align-items:center; gap:12px }
+    .lang span{ display:none }
+    select{
+      background:#1f033d; 
+      color:#fff; 
+      border:1px solid var(--vio);
+      border-radius:8px; 
+      padding:6px 10px; 
+      font-family:'Russo One', sans-serif;
+    }
+    .box{
+      background:var(--card);
+      border:1px solid var(--vio);
+      box-shadow:0 0 18px #8000ff33;
+      border-radius:16px;
+      margin: 18px auto 32px;
+      padding: 22px 26px;
+      max-width: 980px;
+    }
+    h1{
+      margin:0 0 20px;
+      text-shadow:0 0 12px #f0f;
+      font-size: 32px; /* единый масштаб с другими страницами */
+      line-height:1.2;
+      text-align:center;
+    }
+    p, li{
+      color:var(--muted);
+      font-size: 18px; /* как на других страницах */
+      line-height:1.4; /* одинаковая высота строк */
+    }
+    ul{ margin:0; padding-left:20px }
+    @media (max-width:599px){
+      .right{ position:static; order:3; }
+      .box{ max-width:92%; padding: 16px; }
+    }
   </style>
   <script src="public/i18n.js"></script>
 </head>
@@ -24,27 +60,33 @@
   <div class="topbar">
     <nav>
       <a href="index.html" data-i18n="nav_home">Главная</a>
+      <a href="rules.html" data-i18n="nav_rules">Правила</a>
+      <a href="winners.html" data-i18n="nav_winners">Победители</a>
       <a href="philosophy.html" data-i18n="nav_philosophy">Философия</a>
     </nav>
-    <div class="lang"><span data-i18n="lang_label">Язык</span>
-      <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+    <div class="right">
+      <div class="lang">
+        <span data-i18n="lang_label">Язык</span>
+        <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
+      </div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="box">
-      <h1 data-i18n="rules_title">Кодекс Культа</h1>
-      <ul>
-        <li data-i18n="rule_1"></li>
-        <li data-i18n="rule_2"></li>
-        <li data-i18n="rule_3"></li>
-        <li data-i18n="rule_4"></li>
-        <li data-i18n="rule_5"></li>
-        <li data-i18n="rule_6"></li>
-      </ul>
-    </div>
+  <div class="box">
+    <h1 data-i18n="rules_h1">Правила</h1>
+    <ul>
+      <li data-i18n="rules_1">Каждую неделю проходит один ритуал с одним победителем.</li>
+      <li data-i18n="rules_2">Вход — $1 в USDT (TRC-20). Половина банка уходит победителю.</li>
+      <li data-i18n="rules_3">До ритуала на главной виден таймер. После — имя победителя и сумма.</li>
+      <li data-i18n="rules_4">Факт участия фиксируется после подтверждения транзакции.</li>
+      <li data-i18n="rules_5">Рандомайзер выбирает победителя среди участников недели.</li>
+    </ul>
   </div>
 
-  <script>langSel.value=LANG;langSel.addEventListener('change',e=>I18N.setLang(e.target.value));</script>
+  <script>
+    const sel = document.getElementById('langSel');
+    sel.value = window.LANG || 'ru';
+    sel.addEventListener('change', e => I18N.setLang(e.target.value));
+  </script>
 </body>
 </html>

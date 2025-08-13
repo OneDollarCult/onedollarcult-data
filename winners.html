@@ -10,19 +10,17 @@
     *{ box-sizing:border-box; }
     body{
       margin:0; color:#fff; background: radial-gradient(1100px 520px at 50% -10%, #21004a 0%, #0b0016 60%, #000 100%);
-      font-family:'Russo One', system-ui, arial, sans-serif;
+      font-family:'Russo One', sans-serif;
     }
 
-    /* TOPBAR (как на index) */
-    .topbar{ position:relative; padding:22px 16px 10px; display:flex; justify-content:center; align-items:center; }
+    .topbar{ position:relative; padding:22px 16px 10px; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; row-gap:8px; }
     nav{ display:flex; gap:18px; align-items:center; justify-content:center; flex-wrap:wrap; }
-    nav a{ color:#fff; text-decoration:none; font-size:20px }
+    nav a{ color:#fff; text-decoration:none; font-size:18px; white-space:nowrap; }
     nav a:hover{ text-shadow:0 0 10px #fff3 }
     .right{ position:absolute; top:14px; right:16px; display:flex; align-items:center; gap:10px; }
-    .lang span{ display:none } /* убираем слово */
+    .lang span{ display:none }
     select{ background:#1f033d; color:#fff; border:1px solid #7740ff; border-radius:9px; padding:6px 10px; font-family:'Russo One', sans-serif; }
 
-    /* LAYOUT */
     .wrap{ max-width:1100px; margin:8px auto 60px; padding:0 14px; }
     .panel{
       background:var(--card);
@@ -31,48 +29,50 @@
       padding:18px 16px 22px;
     }
     h1{
-      margin:8px 6px 14px; line-height:1.1;
-      font-size:clamp(24px,6.2vw,44px);
+      margin:8px 6px 14px; 
+      line-height:1.2;
+      font-size:32px; /* единый масштаб */
       text-shadow:0 0 14px #f0f;
       text-align:center;
     }
-    .meta{
-      margin:0 6px 14px; color:#cfcbe8; font-size:clamp(14px,3.2vw,18px);
+    .meta{ 
+      margin:0 6px 14px; 
+      color:#cfcbe8; 
+      font-size:18px; /* как на других страницах */
     }
     .btn{
       display:block; width:100%; max-width:520px; margin:0 auto 14px; text-align:center;
       background:var(--btn); color:#fff; text-decoration:none; border:0; cursor:pointer;
-      font-family:'Russo One', system-ui, arial, sans-serif;
-      font-size:clamp(18px,4.2vw,22px); padding:12px 18px; border-radius:14px;
+      font-family:'Russo One', sans-serif;
+      font-size:18px; /* единый размер */
+      padding:12px 18px; border-radius:14px;
       box-shadow:0 0 16px #ff3b73; transition:.2s;
     }
     .btn:hover{ background:#ff1f5c; box-shadow:0 0 22px #ff5b8e }
 
-    /* TABLE WRAP: чтобы на мобилках ничего не «ехало» */
     .table-wrap{
       margin-top:10px; background:#13022c; border-radius:14px; overflow:hidden;
       box-shadow: inset 0 0 0 1px #7a27ff, 0 0 14px #7a27ff55;
     }
     .scroll-x{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    table{ width:100%; border-collapse:collapse; min-width:640px; } /* min-width — чтобы колонки читались; контейнер скроллится */
+    table{ width:100%; border-collapse:collapse; min-width:640px; }
     thead th{
       text-align:left; padding:14px 16px;
-      font-size:clamp(14px,3.6vw,18px); color:#dcd7f2; border-bottom:1px solid #4c248a;
+      font-size:18px; color:#dcd7f2; border-bottom:1px solid #4c248a;
     }
     tbody td{
-      padding:14px 16px; font-size:clamp(14px,3.6vw,18px); border-bottom:1px solid #30115f;
+      padding:14px 16px; font-size:18px; border-bottom:1px solid #30115f;
       color:#fff;
     }
     tbody tr:last-child td{ border-bottom:0 }
+    .empty{ padding:16px; color:#bdb9d1; font-size:18px }
 
-    .empty{ padding:16px; color:#bdb9d1; font-size:clamp(14px,3.8vw,18px) }
-
-    /* MOBILE TWEAKS */
     @media (max-width: 680px){
       nav{ gap:14px }
       nav a{ font-size:18px }
-      .right{ top:10px; right:12px }
+      .right{ position:static; order:3; }
       .meta{ text-align:left }
+      .wrap{ padding:0 10px; }
     }
   </style>
   <script src="public/i18n.js"></script>
@@ -83,6 +83,7 @@
       <a href="index.html" data-i18n="nav_home">Главная</a>
       <a href="rules.html" data-i18n="nav_rules">Правила</a>
       <a href="philosophy.html" data-i18n="nav_philosophy">Философия</a>
+      <a href="winners.html" data-i18n="nav_winners">Победители</a>
     </nav>
     <div class="right">
       <div class="lang">
@@ -123,13 +124,10 @@
   </div>
 
   <script>
-    // язык
     const sel = document.getElementById('langSel');
-    sel.value = LANG;
+    sel.value = window.LANG || 'ru';
     sel.addEventListener('change', e=>I18N.setLang(e.target.value));
 
-    // Если у вас уже есть логика подгрузки победителей — оставьте её.
-    // Ниже — мягкий «крючок»: если глобальная функция loadWinners существует, вызовем её.
     if (typeof window.loadWinners === 'function') {
       window.loadWinners({
         refreshBtn: document.getElementById('refreshBtn'),

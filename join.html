@@ -5,115 +5,174 @@
   <title data-i18n="join_title">Регистрация — OneDollarCult</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+  <!-- Ставим язык ДО рендера, чтобы не мигало -->
+  <script>
+    (function(){
+      try {
+        var savedLang = localStorage.getItem('odc_lang');
+        if (!savedLang) savedLang = (navigator.language||'en').toLowerCase().startsWith('ru') ? 'ru' : 'en';
+        window.LANG = savedLang;
+        document.documentElement.lang = savedLang;
+      } catch(e) {
+        window.LANG = 'ru';
+        document.documentElement.lang = 'ru';
+      }
+    })();
+  </script>
+
   <style>
     body { background: radial-gradient(circle at center,#14022b,#000); color:#fff; font-family:'Russo One', sans-serif; margin:0; }
-    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
-    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; }
+    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; row-gap:8px; }
+    nav a { margin:0 14px; color:#fff; text-decoration:none; font-size:18px; white-space:nowrap; }
     .lang { position:absolute; right:20px; top:16px; display:flex; align-items:center; gap:8px; color:#bbb; font-size:14px; }
     select { background:#1f033d; color:#fff; border:1px solid #8000ff; border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif; }
 
     .container { text-align:center; padding:20px; }
-    .box { background:#1f033d; padding:22px 26px; border-radius:12px; display:inline-block; box-shadow:0 0 15px #8000ff; max-width:520px; }
-    h2 { text-shadow:0 0 8px #f0f; margin:6px 0 14px; }
-    input[type="text"], input[type="email"] { margin:8px 0; padding:10px; width:280px; font-size:15px; border-radius:8px; border:none; font-family:'Russo One', sans-serif; }
-    
-    button { 
-      background:#ff0044; 
-      color:#fff; 
-      cursor:pointer; 
-      box-shadow:0 0 12px #ff0044; 
-      border:none; 
-      border-radius:10px; 
-      padding:12px 18px; 
-      width:280px; 
-      font-size:16px; 
-      font-family:'Russo One', sans-serif;
+    .box { background:#1f033d; padding:22px 26px; border-radius:12px; display:inline-block; box-shadow:0 0 15px #8000ff; max-width:520px; width:100%; }
+    h2 { text-shadow:0 0 8px #f0f; margin:6px 0 14px; font-size:26px; }
+
+    .field { margin:8px 0; }
+    input[type="text"], input[type="email"] {
+      padding:10px; width:280px; max-width:100%;
+      font-size:15px; border-radius:8px; border:none; font-family:'Russo One', sans-serif;
+    }
+
+    button {
+      background:#ff0044; color:#fff; cursor:pointer; box-shadow:0 0 12px #ff0044;
+      border:none; border-radius:10px; padding:12px 18px; width:280px; max-width:100%;
+      font-size:16px; font-family:'Russo One', sans-serif; margin-top:6px;
     }
     button:hover{ background:#ff2266; box-shadow:0 0 16px #ff2266; }
 
-    .avatar-preview { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #8000ff; margin: 12px auto; background:#000 center/cover no-repeat; box-shadow: 0 0 12px rgba(128,0,255,0.6); }
+    .avatar-preview { width:120px; height:120px; border-radius:50%; border:3px solid #8000ff; margin:12px auto; background:#000 center/cover no-repeat; box-shadow:0 0 12px rgba(128,0,255,0.6); }
 
     /* Кастомный загрузчик */
     .uploader { display:flex; flex-direction:column; align-items:center; gap:6px; margin:10px 0 14px; }
     #fileInput { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
-    .file-btn { 
-      display:inline-block; 
-      background:#ffffff; 
-      color:#000; 
-      border-radius:8px; 
-      padding:10px 14px; 
-      cursor:pointer; 
-      user-select:none; 
-      font-family:'Russo One', sans-serif;
+    .file-btn {
+      display:inline-block; background:#ffffff; color:#000; border-radius:8px; padding:10px 14px; cursor:pointer; user-select:none; font-family:'Russo One', sans-serif;
     }
     .file-name { font-size:14px; color:#cfcbe8; min-height:18px; font-family:'Russo One', sans-serif; }
 
-    @media (max-width:599px){ .box{ max-width: 92%; } input,button{ width: 100%; } }
+    @media (max-width:599px){
+      .box{ max-width: 92%; }
+      input,button{ width: 100%; }
+      .lang{ position:static; order:3; }
+    }
   </style>
+
   <script src="public/i18n.js"></script>
 </head>
 <body>
   <div class="topbar">
     <nav>
-      <a href="index.html" data-i18n="nav_home">Home</a>
-      <a href="rules.html" data-i18n="nav_rules">Rules</a>
-      <a href="winners.html" data-i18n="nav_winners">Winners</a>
+      <a href="index.html" data-i18n="nav_home">Главная</a>
+      <a href="rules.html" data-i18n="nav_rules">Правила</a>
+      <a href="winners.html" data-i18n="nav_winners">Победители</a>
     </nav>
-    <div class="lang"><span data-i18n="lang_label">Language</span>
+    <div class="lang">
+      <span data-i18n="lang_label">Язык</span>
       <select id="langSel"><option value="ru">RU</option><option value="en">EN</option></select>
     </div>
   </div>
 
   <div class="container">
     <div class="box">
-      <h2 data-i18n="join_title">Registration</h2>
+      <h2 id="joinTitle" data-i18n="join_title">Регистрация</h2>
 
-      <input id="nick" type="text" data-i18n-ph="ph_nick" placeholder="Nickname" /><br>
-      <input id="email" type="email" data-i18n-ph="ph_email" placeholder="Email" /><br>
+      <div class="field">
+        <input id="nick" type="text" data-i18n-ph="ph_nick" placeholder="Никнейм" />
+      </div>
+      <div class="field">
+        <input id="email" type="email" data-i18n-ph="ph_email" placeholder="Email" />
+      </div>
 
       <div class="avatar-preview" id="avatarPreview"></div>
 
       <div class="uploader">
         <input id="fileInput" type="file" accept="image/*" />
-        <label for="fileInput" class="file-btn" id="fileBtn">Choose file</label>
-        <div class="file-name" id="fileName">No file chosen</div>
+        <label for="fileInput" class="file-btn" id="fileBtn">Выбери файл</label>
+        <div class="file-name" id="fileName">Файл не выбран</div>
       </div>
 
-      <!-- Исправленный текст кнопки -->
       <button id="goPayBtn" data-i18n="btn_go_pay">Кинуть $1</button>
     </div>
   </div>
 
   <script>
-    const UTXT = {
-      ru: { choose: 'Выбери файл', none: 'Файл не выбран' },
-      en: { choose: 'Choose file',   none: 'No file chosen' }
+    // Локальные тексты страницы Join (плейсхолдеры/загрузчик/кнопки/титлы)
+    const JTXT = {
+      ru: {
+        titleTag: "Регистрация — OneDollarCult",
+        h2: "Регистрация",
+        ph_nick: "Никнейм",
+        ph_email: "Email",
+        file_choose: "Выбери файл",
+        file_none: "Файл не выбран",
+        btn_pay: "Кинуть $1",
+        alert_fill: "Заполни ник и email"
+      },
+      en: {
+        titleTag: "Join — OneDollarCult",
+        h2: "Join",
+        ph_nick: "Nickname",
+        ph_email: "Email",
+        file_choose: "Choose file",
+        file_none: "No file chosen",
+        btn_pay: "Join for $1",
+        alert_fill: "Fill nickname and email"
+      }
     };
 
+    // Инициализация селектора языка
     const langSel = document.getElementById('langSel');
-    langSel.value = LANG;
-    langSel.addEventListener('change', e => I18N.setLang(e.target.value));
+    langSel.value = window.LANG || 'ru';
+    langSel.addEventListener('change', e => {
+      I18N.setLang(e.target.value); // подменит все data-i18n
+      applyJoinTexts(e.target.value); // а это — плейсхолдеры/кнопки/загрузчик/титлы
+    });
 
+    // Обновляем локальные элементы, которые не покрывает i18n.js
+    function applyJoinTexts(lang){
+      const L = (lang||window.LANG||'ru').toLowerCase().startsWith('ru') ? 'ru' : 'en';
+      const t = JTXT[L];
+
+      // <title> (на случай, если в i18n.js нет ключа join_title)
+      document.title = t.titleTag;
+
+      // H2 (дублируем для надёжности)
+      document.getElementById('joinTitle').textContent = t.h2;
+
+      // placeholders
+      const nick = document.getElementById('nick');
+      const email = document.getElementById('email');
+      nick.placeholder  = t.ph_nick;
+      email.placeholder = t.ph_email;
+
+      // uploader
+      const fileBtn  = document.getElementById('fileBtn');
+      const fileName = document.getElementById('fileName');
+      fileBtn.textContent = t.file_choose;
+      if (!document.getElementById('fileInput').files.length) {
+        fileName.textContent = t.file_none;
+      }
+
+      // main action
+      document.getElementById('goPayBtn').textContent = t.btn_pay;
+    }
+
+    // Загрузчик аватара
     const defaultAvatarPath = 'public/logo.png';
     let selectedAvatar = null;
 
     const fileInput = document.getElementById('fileInput');
-    const fileBtn   = document.getElementById('fileBtn');
     const fileName  = document.getElementById('fileName');
     const avatarPreview = document.getElementById('avatarPreview');
 
-    function paintUploaderTexts() {
-      const L = I18N.lang() === 'ru' ? 'ru' : 'en';
-      fileBtn.textContent  = UTXT[L].choose;
-      if(!fileInput.files.length) fileName.textContent = UTXT[L].none;
-
-      // Обновляем текст кнопки в зависимости от языка
-      document.getElementById('goPayBtn').textContent = (L === 'ru') ? 'Кинуть $1' : 'Send $1';
-    }
-    paintUploaderTexts();
-    window.addEventListener('langchange', paintUploaderTexts);
-
     fileInput.addEventListener('change', e=>{
+      const L = (window.LANG||'ru').toLowerCase().startsWith('ru') ? 'ru' : 'en';
+      const t = JTXT[L];
       const file = e.target.files[0];
       if(file){
         fileName.textContent = file.name;
@@ -124,17 +183,21 @@
         };
         reader.readAsDataURL(file);
       }else{
-        paintUploaderTexts();
+        fileName.textContent = t.file_none;
         avatarPreview.style.backgroundImage = 'none';
         selectedAvatar = null;
       }
     });
 
+    // Кнопка «Оплатить/Join for $1»
     document.getElementById('goPayBtn').addEventListener('click', async ()=>{
+      const L = (window.LANG||'ru').toLowerCase().startsWith('ru') ? 'ru' : 'en';
+      const t = JTXT[L];
+
       const nickname = document.getElementById('nick').value.trim();
       const emailVal = document.getElementById('email').value.trim();
       if(!nickname || !emailVal){
-        alert(I18N.lang()==='ru'?'Заполни ник и email':'Fill nickname and email');
+        alert(t.alert_fill);
         return;
       }
 
@@ -151,10 +214,16 @@
             headers:{'Content-Type':'application/json'},
             body: JSON.stringify({ nickname, email: emailVal, avatar: selectedAvatar })
           });
-        } catch(e) { }
+        } catch(e) { /* молча игнорим */ }
       }
 
       window.location.href='payment.html';
+    });
+
+    // Применяем текущее (сохранённое) состояние языка сразу при загрузке
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // I18N.apply уже вызовется внутри i18n.js; дополнительно синхронизируем наши локальные тексты:
+      applyJoinTexts(window.LANG || 'ru');
     });
   </script>
 </body>
