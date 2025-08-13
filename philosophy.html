@@ -6,20 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg2:#1a0033; --vio:#8000ff; --card:#1f033d; --text:#fff; --muted:#d9d6ea;
-    }
+    :root{ --bg2:#1a0033; --vio:#8000ff; --card:#1f033d; --text:#fff; --muted:#d9d6ea; }
     *{box-sizing:border-box}
     body{
       margin:0; color:var(--text); font-family:'Russo One', sans-serif;
       background: radial-gradient(circle at center, var(--bg2), #000 70%);
     }
-
-    /* header (без слова «Язык» на мобиле уже скрываем общим правилом в index) */
-    .topbar{
-      position:relative; padding:22px 20px 8px;
-      display:flex; justify-content:center; align-items:center;
-    }
+    .topbar{ position:relative; padding:22px 20px 8px; display:flex; justify-content:center; align-items:center; }
     nav{display:flex; gap:24px; flex-wrap:wrap; justify-content:center}
     nav a{color:#fff; text-decoration:none; font-size:18px}
     .right{ position:absolute; right:20px; top:12px; display:flex; align-items:center; gap:12px }
@@ -29,8 +22,6 @@
       border-radius:8px; padding:6px 10px; font-family:'Russo One', sans-serif;
     }
     @media (max-width:599px){ .lang span{display:none} }
-
-    /* content box */
     .ph-box{
       background:var(--card);
       border:1px solid var(--vio);
@@ -57,7 +48,6 @@
   <script src="public/i18n.js"></script>
 </head>
 <body>
-  <!-- header -->
   <div class="topbar">
     <nav>
       <a href="index.html" data-i18n="nav_home">Главная</a>
@@ -72,26 +62,16 @@
     </div>
   </div>
 
-  <!-- content -->
   <div class="ph-box">
     <h1 data-i18n="ph_title">Легенда о Монете</h1>
-
-    <p data-i18n="ph_p1">
-      Говорят, жил мудрец, который мечтал о невозможном: однажды каждый житель Земли отдаст ему по одной монете. Он не знал, зачем ему эти монеты — он знал только, что в тот день поймёт смысл.
-    </p>
-
-    <p data-i18n="ph_p2">
-      И однажды Бог услышал его. Люди из всех стран мира, не сговариваясь, отправили по монете. Мудрец стал богат — не золотом, а отражением мира.
-    </p>
-
-    <p data-i18n="ph_p3">
-      Тогда он вернул половину обратно. Истина — не в получении, а в возвращении. Так родился OneDollarCult.
-    </p>
+    <p data-i18n="ph_p1">Говорят, жил мудрец, который мечтал о невозможном: однажды каждый житель Земли отдаст ему по одной монете. Он не знал, зачем ему эти монеты — он знал только, что в тот день поймёт смысл.</p>
+    <p data-i18n="ph_p2">И однажды Бог услышал его. Люди из всех стран мира, не сговариваясь, отправили по монете. Мудрец стал богат — не золотом, а отражением мира.</p>
+    <p data-i18n="ph_p3">Тогда он вернул половину обратно. Истина — не в получении, а в возвращении. Так родился OneDollarCult.</p>
   </div>
 
   <script>
     const sel = document.getElementById('langSel');
-    sel.value = LANG;
+    sel.value = typeof LANG !== 'undefined' ? LANG : 'ru';
     sel.addEventListener('change', e => I18N.setLang(e.target.value));
   </script>
 </body>
