@@ -1,10 +1,10 @@
 /* public/i18n.js — OneDollarCult
-   Единый словарь RU/EN для всех страниц: index, join, rules, winners, philosophy
-   — обновляет элементы с [data-i18n]
-   — поддерживает подстановку {n} из data-n
-   — обновляет <title data-i18n="...">
-   — даёт I18N.lang(), I18N.setLang(), I18N.apply()
-   — диспатчит событие window 'langchange'
+   Единый словарь RU/EN для всех страниц
+   — обновляет элементы с [data-i18n] и [data-i18n-ph]
+   — поддерживает {n} из data-n
+   — корректно обновляет <title data-i18n="...">
+   — I18N.lang(), I18N.setLang(), I18N.apply()
+   — диспатчит window 'langchange'
 */
 (function (w) {
   const DICT = {
@@ -16,7 +16,7 @@
       nav_philosophy: "Философия",
       lang_label: "Язык",
 
-      // Главная (index)
+      // Главная
       title_main: "OneDollarCult",
       slogan: "Один доллар. Один шанс. Один победитель.",
       btn_send1: "Кинуть $1",
@@ -37,14 +37,15 @@
       join_no_file: "Файл не выбран",
       join_fill_alert: "Заполни ник и email",
 
-      // Rules (обновлённые тексты)
+      // Rules (обновлено: только USDT TRC-20)
       rules_title: "Правила — OneDollarCult",
       rules_h1: "Правила",
-      rules_1: "Раз в семь дней священный механизм пробуждается — и происходит Ритуал Избрания. Лишь один из верных получает благословение судьбы.",
-      rules_2: "Чтобы войти в Круг, ты приносишь жертву в размере $1 в USDT (TRC-20). Половина накопленного Сокровища уходит Избранному.",
-      rules_3: "До часа Ритуала на алтаре Главной страницы горит Огненный Таймер. Когда время придёт — он откроет имя и дары победителя.",
-      rules_4: "Твой обет считается принятым лишь после того, как цепь блокчейна подтвердит жертвоприношение.",
-      rules_5: "Избранник определяется древним Колесом Судьбы — случайным выбором без вмешательства руки человеческой.",
+      rules_1: "OneDollarCult — культ одного доллара. На алтаре Главной страницы сияет кнопка «Кинуть $1».",
+      rules_2: "Жертву можно принести только в USDT (TRC-20). Карты, банки и иные способы отвергнуты.",
+      rules_3: "Сумма неизменна — ровно $1. Больше — нельзя. Но можно приносить дары несколько раз, указывая один и тот же email.",
+      rules_4: "Каждое воскресенье в 18:00 (по МСК) Культ проводит Ритуал Избрания: из всех верных случайно выбирается один Избранник.",
+      rules_5: "Избранник получает половину всего накопленного Банка. Другая половина остаётся Культу. После Ритуала Банк обнуляется.",
+      rules_6: "Один доллар. Один шанс. Один победитель. Одна неделя. И так — бесконечно.",
 
       // Winners
       winners_title: "Победители — OneDollarCult",
@@ -93,14 +94,15 @@
       join_no_file: "No file chosen",
       join_fill_alert: "Fill nickname and email",
 
-      // Rules (updated mystic text)
+      // Rules (updated: USDT TRC-20 only)
       rules_title: "Rules — OneDollarCult",
       rules_h1: "Rules",
-      rules_1: "Every seven days the sacred mechanism awakens — and the Ritual of Choosing begins. Only one devotee receives fate’s blessing.",
-      rules_2: "To enter the Circle, you offer a tribute of $1 in USDT (TRC-20). Half of the gathered Treasure goes to the Chosen One.",
-      rules_3: "Until the hour of the Ritual, a Burning Timer glows on the Home altar. When the moment comes, it reveals the winner’s name and reward.",
-      rules_4: "Your vow is accepted only after the blockchain confirms your offering.",
-      rules_5: "The Chosen One is decided by the ancient Wheel of Fate — a random selection with no human interference.",
+      rules_1: "OneDollarCult is the cult of a single dollar. On the Home altar shines the “Join for $1” button.",
+      rules_2: "The offering can be made only in USDT (TRC-20). Cards, banks, and other methods are rejected.",
+      rules_3: "The amount is fixed — exactly $1. No more. You may give multiple times using the same email.",
+      rules_4: "Every Sunday at 18:00 (MSK), the Cult holds the Ritual of Choosing: one Chosen is picked at random from all who gave.",
+      rules_5: "The Chosen receives half of the total Bank. The other half remains with the Cult. After the Ritual, the Bank resets.",
+      rules_6: "One dollar. One chance. One winner. One week. Forever.",
 
       // Winners
       winners_title: "Winners — OneDollarCult",
@@ -129,7 +131,7 @@
   function apply(lang) {
     const dict = DICT[lang] || DICT.ru;
 
-    // Проставляем тексты
+    // Тексты
     document.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
       if (!key) return;
@@ -147,7 +149,7 @@
       }
     });
 
-    // Плейсхолдеры (input[data-i18n-ph])
+    // Плейсхолдеры
     document.querySelectorAll("[data-i18n-ph]").forEach(el => {
       const key = el.getAttribute("data-i18n-ph");
       const val = dict[key];
