@@ -1,172 +1,178 @@
 // server.js
-const fs = require('fs');
-const path = require('path');
-const express = require('express');
-const cors = require('cors');
-const cron = require('node-cron');
+// Бэк без БД: читаем TRON напрямую и кэшируем ответы.
+// Фронт НЕ меняем.
 
-const PORT = process.env.PORT || 3000;
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// === ваш приёмный TRC-20 адрес USDT (куда платят) ===
-const BANK_ADDRESS = 'TX5iuanUcs1YubXrFyDtM3L7Jvhr4vWyij';
-// контракт USDT TRC-20
-const USDT_CONTRACT = 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.static(__dirname));
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use(express.json());
 
-const playersFile  = path.join(__dirname, 'players.json');
-const winnersFile  = path.join(__dirname, 'winners.json');
-const paymentsFile = path.join(__dirname, 'payments.json'); // виденные tx
+// === НАСТРОЙКИ ===
+const ADDRESS = process.env.ODC_TRON_ADDRESS || "TX5iuanUcs1YubXrFyDtM3L7Jvhr4vWyij";
+const USDT_CONTRACT = process.env.ODC_USDT_CONTRACT || "TXLAQ63Xg1NAzckPwKHvzw7CSEmLMEqcdj";
 
-// helpers
-const readJSON = (p) => (fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8') || '[]') : []);
-const writeJSON = (p, data) => fs.writeFileSync(p, JSON.stringify(data, null, 2));
+// TronScan публичные эндпоинты
+const TS = {
+  tokens: (addr) =>
+    `https://apilist.tronscanapi.com/api/account/tokens?address=${addr}&start=0&limit=100&hidden=0&show0=false`,
+  trc20Transfers: (q) =>
+    `https://apilist.tronscanapi.com/api/token_trc20/transfers?${q}`,
+};
 
-if (!fs.existsSync(playersFile))  writeJSON(playersFile,  []);
-if (!fs.existsSync(winnersFile))  writeJSON(winnersFile,  []);
-if (!fs.existsSync(paymentsFile)) writeJSON(paymentsFile, []);
+async function fetchJSON(url, { retries = 3, pause = 600 } = {}) {
+  let lastErr;
+  for (let i = 0; i < retries; i++) {
+    try {
+      const r = await fetch(url, { headers: { accept: "application/json" } });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return await r.json();
+    } catch (e) {
+      lastErr = e;
+      await new Promise((r) => setTimeout(r, pause));
+    }
+  }
+  throw lastErr;
+}
 
-// health
-app.get('/healthz', (_,res)=>res.json({ok:true}));
+// ===== КЭШ (простенький, в памяти) =====
+const cache = new Map();
+function setCache(key, value, ttlMs) {
+  cache.set(key, { value, exp: Date.now() + ttlMs });
+}
+function getCache(key) {
+  const c = cache.get(key);
+  if (!c) return null;
+  if (Date.now() > c.exp) {
+    cache.delete(key);
+    return null;
+  }
+  return c.value;
+}
+
+// ===== UTILS =====
+function toFixed(n, d = 2) {
+  return Math.round(n * Math.pow(10, d)) / Math.pow(10, d);
+}
+
+// Читаем баланс USDT TRC-20 адреса
+async function getUsdtBalance(addr) {
+  const ck = `bal:${addr}`;
+  const cached = getCache(ck);
+  if (cached != null) return cached;
+
+  const j = await fetchJSON(TS.tokens(addr));
+  const row =
+    (j?.data || []).find(
+      (t) =>
+        t.tokenId === USDT_CONTRACT ||
+        t.tokenName === "Tether USD" ||
+        t.tokenAbbr === "USDT"
+    ) || null;
+
+  let bal = 0;
+  if (row) {
+    const prec = row.tokenDecimal ?? row.tokenPrecision ?? 6;
+    const raw = Number(row.balance ?? row.quantity ?? row.amount ?? 0);
+    bal = raw / Math.pow(10, prec);
+  }
+  setCache(ck, bal, 15_000); // 15 сек
+  return bal;
+}
+
+// Возвращает массив входящих USDT-трансферов (последние N)
+async function getIncomingUsdt(addr, { limit = 200 } = {}) {
+  const q = new URLSearchParams({
+    toAddress: addr,
+    contract_address: USDT_CONTRACT,
+    start: "0",
+    limit: String(limit),
+  }).toString();
+  const j = await fetchJSON(TS.trc20Transfers(q));
+  const arr = j?.token_transfers || j?.data || [];
+  return arr.map((t) => ({
+    txId: t.transaction_id || t.txHash || t.hash,
+    from: t.from || t.from_address,
+    to: t.to || t.toAddress,
+    amount: parseFloat(t.amount_str ?? t.quant ?? t.amount ?? "0"),
+    ts: Number(t.block_ts || t.timestamp || 0),
+  }));
+}
 
 // ===== API =====
 
-// 1) Сохраняем профиль при заходе на оплату (без "paid")
-app.post('/api/save-user', (req, res) => {
-  const { nickname, email, avatar } = req.body || {};
-  if (!nickname || !email) return res.status(400).json({ ok:false, error:'nickname/email required' });
-
-  const players = readJSON(playersFile);
-  players.push({
-    id: Date.now().toString(36),
-    nickname,
-    email,
-    avatar: avatar || 'public/logo.png',
-    paid: false,                 // важное изменение (раньше было true в MVP)
-    createdAt: new Date().toISOString()
-  });
-  writeJSON(playersFile, players);
-
-  res.json({ ok:true });
-});
-
-// 2) Статистика (считаем только оплаченных)
-app.get('/api/stats', (req, res) => {
-  const players = readJSON(playersFile);
-  res.json({ players: players.filter(p=>p.paid).length });
-});
-
-// 3) Банк (50% от суммы оплаченных * 1 USDT)
-app.get('/api/bank', (req, res) => {
-  const players = readJSON(playersFile);
-  const total = players.filter(p => p.paid).length * 1;
-  const half = Math.floor(total * 0.5 * 100) / 100;
-  res.json({ address: BANK_ADDRESS, total, half });
-});
-
-// 4) Последний победитель
-app.get('/api/latest-winner', (req, res) => {
-  const winners = readJSON(winnersFile);
-  res.json(winners[winners.length - 1] || {});
-});
-
-// 5) Список победителей
-app.get('/api/winners', (req, res) => {
-  res.json(readJSON(winnersFile));
-});
-
-// ===== Проверка входящих 1 USDT без адреса отправителя =====
-//
-// Логика:
-// - тянем свежие входящие TRC20-транзакции USDT на наш BANK_ADDRESS
-//   с TronScan публичного API
-// - ищем платёж ровно на 1 USDT (USDT имеет 6 знаков после запятой => 1e6)
-// - пропускаем уже "виденные" tx (payments.json)
-// - если нашли новый — помечаем последнего НЕОПЛАЧЕННОГО игрока как paid=true
-// - возвращаем результат
-//
-app.post('/api/check-payment', async (req, res) => {
+// БАНК
+app.get("/api/bank", async (req, res) => {
   try {
-    const apiUrl = `https://apilist.tronscanapi.com/api/token_trc20/transfers` +
-      `?limit=50&toAddress=${BANK_ADDRESS}&contract_address=${USDT_CONTRACT}`;
-
-    // Node 20+ имеет встроенный fetch
-    const r = await fetch(encodeURI(apiUrl));
-    if (!r.ok) throw new Error('TronScan API error');
-    const data = await r.json();
-
-    const seen = new Set(readJSON(paymentsFile));           // список txid, которые уже засчитали
-    const ONE_USDT = 1_000_000;                              // 1 * 10^6
-    const now = Date.now();
-
-    // оставим только свежие (за последние 90 минут), к адресу BANK_ADDRESS
-    const recent = (data?.token_transfers || []).filter(tx => {
-      // на некоторых ответах поле decimal/quant равны строкам
-      const value = Number(tx.quant || tx.value || 0);
-      const to    = tx.to_address || tx.to || '';
-      const ts    = Number(tx.block_ts || tx.timestamp || 0);
-      const okAge = (now - ts) <= 90 * 60 * 1000; // 90 минут
-      return to === BANK_ADDRESS && value === ONE_USDT && okAge;
-    });
-
-    // найдём первый "новый" tx
-    const fresh = recent.find(tx => !seen.has(tx.transaction_id));
-    if (!fresh) return res.json({ ok:false, found:false, reason:'not_found' });
-
-    // помечаем tx как использованный
-    seen.add(fresh.transaction_id);
-    writeJSON(paymentsFile, Array.from(seen));
-
-    // отмечаем последнего неоплаченного игрока как paid
-    const players = readJSON(playersFile);
-    const idx = [...players].reverse().findIndex(p => !p.paid);
-    if (idx === -1) {
-      return res.json({ ok:true, found:true, note:'no_unpaid_player', txid:fresh.transaction_id });
-    }
-    const realIndex = players.length - 1 - idx;
-    players[realIndex].paid = true;
-    players[realIndex].txid = fresh.transaction_id;
-    players[realIndex].from = fresh.from_address || fresh.from || '';
-    players[realIndex].paidAt = new Date().toISOString();
-    writeJSON(playersFile, players);
-
-    res.json({ ok:true, found:true, nickname: players[realIndex].nickname });
+    const total = await getUsdtBalance(ADDRESS);
+    res.json({ ok: true, total: toFixed(total, 2), half: toFixed(total / 2, 2) });
   } catch (e) {
-    console.error('check-payment error:', e);
-    res.status(500).json({ ok:false, error:'internal' });
+    res.status(500).json({ ok: false, error: e.message });
   }
 });
 
-// ===== РИТУАЛ =====
-function runRitual() {
-  const players = readJSON(playersFile).filter(p => p.paid);
-  if (!players.length) return null;
+// СТАТИСТИКА (игроки/неделя)
+app.get("/api/stats", async (req, res) => {
+  try {
+    const now = Date.now();
+    const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
 
-  const rnd = players[Math.floor(Math.random() * players.length)];
-  const bank = players.length * 1;
-  const bankHalf = Math.floor(bank * 0.5 * 100) / 100;
+    const arr = await getIncomingUsdt(ADDRESS, { limit: 500 });
+    // игрок — любой, кто прислал около 1 USDT
+    const players = new Set(
+      arr
+        .filter((t) => t.ts >= weekAgo && Math.abs(t.amount - 1) <= 0.01)
+        .map((t) => (t.from || "").toUpperCase())
+    );
+    res.json({ ok: true, players: players.size });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message, players: 0 });
+  }
+});
 
-  const winners = readJSON(winnersFile);
-  const entry = {
-    id: Date.now().toString(36),
-    nickname: rnd.nickname,
-    email: rnd.email,
-    avatar: rnd.avatar || 'public/logo.png',
-    bankHalf,
-    date: new Date().toISOString()
-  };
-  winners.push(entry);
-  writeJSON(winnersFile, winners);
-  return entry;
-}
+// ПОБЕДИТЕЛЬ (заглушка, чтобы фронт не падал)
+app.get("/api/latest-winner", async (_req, res) => {
+  res.json({ ok: true, nickname: null });
+});
 
-// каждое воскресенье в 12:00 (UTC+3)
-cron.schedule('0 12 * * 0', () => {
-  try { runRitual(); } catch(e){ console.error('ritual error:', e); }
-}, { timezone: 'Europe/Moscow' });
+// ПРОВЕРКА ПЛАТЕЖА (кнопка "Я перевёл(а)")
+app.post("/api/check-payment", async (req, res) => {
+  try {
+    const now = Date.now();
+    const since = now - 45 * 60 * 1000; // 45 минут назад
+    // несколько попыток (TronScan иногда отстаёт)
+    for (let i = 0; i < 3; i++) {
+      const arr = await getIncomingUsdt(ADDRESS, { limit: 200 });
+      const hit = arr.find(
+        (t) => t.ts >= since && Math.abs(t.amount - 1) <= 0.01
+      );
+      if (hit) {
+        return res.json({
+          ok: true,
+          found: true,
+          txId: hit.txId,
+          amount: hit.amount,
+          ts: hit.ts,
+        });
+      }
+      await new Promise((r) => setTimeout(r, 4000));
+    }
+    res.json({ ok: true, found: false });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
 
-app.listen(PORT, () => console.log(`OneDollarCult API running on port ${PORT}`));
+// ===== СТАТИКА (твой фронт без изменений) =====
+app.use(express.static(__dirname, { extensions: ["html"] }));
+
+// ===== СТАРТ =====
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`ODC backend up on :${PORT}`);
+  console.log(`TRON address: ${ADDRESS}`);
+});
