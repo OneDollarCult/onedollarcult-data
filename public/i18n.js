@@ -1,192 +1,147 @@
-/* public/i18n.js — OneDollarCult
-   Единый словарь RU/EN для всех страниц
-   — обновляет элементы с [data-i18n] и [data-i18n-ph]
-   — поддерживает {n} из data-n
-   — корректно обновляет <title data-i18n="...">
-   — I18N.lang(), I18N.setLang(), I18N.apply()
-   — диспатчит window 'langchange'
-*/
-(function (w) {
+// public/i18n.js
+(() => {
   const DICT = {
     ru: {
-      // Навигация
+      // nav & common
       nav_home: "Главная",
       nav_rules: "Правила",
       nav_winners: "Победители",
       nav_philosophy: "Философия",
       lang_label: "Язык",
 
-      // Главная
+      // home
       title_main: "OneDollarCult",
       slogan: "Один доллар. Один шанс. Один победитель.",
       btn_send1: "Кинуть $1",
-      till_ritual: "⏳ До ритуала:",
+      till_ritual: "До ритуала:",
+      players_in: (p) => `👁 В игре: ${p.n} игроков`,
       bank_hint: "Победитель получит 50% от банка",
+      bank_in: (p) => `💰 В банке: ${p.n} USDT`,
       latest_winner: "👑 Победитель прошлой недели:",
       latest_wait: "Ожидание ритуала...",
-      players_count: "В игре — {n}",
-      bank_amount: "В банке — {n} USDT",
+      next_ritual_prefix: "Ближайший ритуал:",
+      next_ritual_tz: "(UTC+3)",
 
-      // Join
-      join_title: "Регистрация — OneDollarCult",
-      join_h2: "Регистрация",
-      ph_nick: "Никнейм",
-      ph_email: "Email",
-      btn_go_pay: "Кинуть $1",
-      join_choose_file: "Выбери файл",
-      join_no_file: "Файл не выбран",
-      join_fill_alert: "Заполни ник и email",
-
-      // Rules (обновлено: только USDT TRC-20)
+      // rules
       rules_title: "Правила — OneDollarCult",
       rules_h1: "Правила",
-      rules_1: "OneDollarCult — культ одного доллара. На алтаре Главной страницы сияет кнопка «Кинуть $1».",
-      rules_2: "Жертву можно принести только в USDT (TRC-20). Карты, банки и иные способы отвергнуты.",
-      rules_3: "Сумма неизменна — ровно $1. Больше — нельзя. Но можно приносить дары несколько раз, указывая один и тот же email.",
-      rules_4: "Каждое воскресенье в 18:00 (по МСК) Культ проводит Ритуал Избрания: из всех верных случайно выбирается один Избранник.",
-      rules_5: "Избранник получает половину всего накопленного Банка. Другая половина остаётся Культу. После Ритуала Банк обнуляется.",
-      rules_6: "Один доллар. Один шанс. Один победитель. Одна неделя. И так — бесконечно.",
+      rules_1: "Кинуть можно ровно $1 в USDT (TRC-20). Банковские карты и другие сети не принимаются.",
+      rules_2: "Можно отправить несколько раз — каждый $1 считается отдельной попыткой. Email указывайте один и тот же.",
+      rules_3: "Ритуал проводится по воскресеньям в 18:00 (UTC+3). Победитель выбирается случайно из всех участников недели.",
+      rules_4: "Победитель получает 50% банка. Оставшиеся 50% идут на поддержание культа и проекта.",
+      rules_5: "После ритуала банк обнуляется, начинается новая неделя и новый сбор.",
+      rules_6: "Участвуя, вы подтверждаете, что понимаете правила и необратимость криптоплатежей.",
 
-      // Winners
+      // winners
       winners_title: "Победители — OneDollarCult",
-      winners_h1: "Победители Ритуалов",
-      total_winners: "Всего победителей: {n}",
       refresh_btn: "Обновить",
+      total_winners: (p) => `Всего победителей: ${p.n}`,
       col_avatar: "Аватар",
       col_user: "Участник",
       col_amount: "Сумма выигрыша",
       col_date: "Дата",
       winners_none: "Ещё не было ритуалов.",
 
-      // Philosophy
+      // philosophy
       ph_title: "Легенда о Монете",
-      ph_p1: "Говорят, жил мудрец, который мечтал о невозможном: однажды каждый житель Земли отдаст ему по одной монете. Он не знал, зачем ему эти монеты — он знал только, что в тот день поймёт смысл.",
-      ph_p2: "И однажды Бог услышал его. Люди из всех стран мира, не сговариваясь, отправили по монете. Мудрец стал богат — не золотом, а отражением мира.",
+      ph_p1: "Говорят, жил мудрец, который мечтал о невозможном: однажды каждый житель Земли отдаст ему по одной монете.",
+      ph_p2: "И однажды Бог услышал его. Люди из всех стран мира, не сговариваясь, отправили по монете.",
       ph_p3: "Тогда он вернул половину обратно. Истина — не в получении, а в возвращении. Так родился OneDollarCult."
     },
-
     en: {
-      // Navigation
+      // nav & common
       nav_home: "Home",
       nav_rules: "Rules",
       nav_winners: "Winners",
       nav_philosophy: "Philosophy",
       lang_label: "Language",
 
-      // Index
+      // home
       title_main: "OneDollarCult",
       slogan: "One dollar. One chance. One winner.",
       btn_send1: "Join for $1",
-      till_ritual: "⏳ Time until ritual:",
+      till_ritual: "Until the ritual:",
+      players_in: (p) => `👁 In game: ${p.n} players`,
       bank_hint: "Winner gets 50% of the bank",
+      bank_in: (p) => `💰 Bank: ${p.n} USDT`,
       latest_winner: "👑 Last week's winner:",
       latest_wait: "Waiting for the ritual...",
-      players_count: "Players — {n}",
-      bank_amount: "Bank — {n} USDT",
+      next_ritual_prefix: "Next ritual:",
+      next_ritual_tz: "(UTC+3)",
 
-      // Join
-      join_title: "Join — OneDollarCult",
-      join_h2: "Join",
-      ph_nick: "Nickname",
-      ph_email: "Email",
-      btn_go_pay: "Join for $1",
-      join_choose_file: "Choose file",
-      join_no_file: "No file chosen",
-      join_fill_alert: "Fill nickname and email",
-
-      // Rules (updated: USDT TRC-20 only)
+      // rules
       rules_title: "Rules — OneDollarCult",
       rules_h1: "Rules",
-      rules_1: "OneDollarCult is the cult of a single dollar. On the Home altar shines the “Join for $1” button.",
-      rules_2: "The offering can be made only in USDT (TRC-20). Cards, banks, and other methods are rejected.",
-      rules_3: "The amount is fixed — exactly $1. No more. You may give multiple times using the same email.",
-      rules_4: "Every Sunday at 18:00 (MSK), the Cult holds the Ritual of Choosing: one Chosen is picked at random from all who gave.",
-      rules_5: "The Chosen receives half of the total Bank. The other half remains with the Cult. After the Ritual, the Bank resets.",
-      rules_6: "One dollar. One chance. One winner. One week. Forever.",
+      rules_1: "You can send exactly $1 in USDT (TRC-20). Cards and other networks are not accepted.",
+      rules_2: "You may send multiple times — each $1 counts as a separate entry. Use the same email.",
+      rules_3: "The ritual is held on Sundays at 18:00 (UTC+3). A winner is randomly selected among the week’s participants.",
+      rules_4: "The winner receives 50% of the bank. The remaining 50% sustains the Cult and the project.",
+      rules_5: "After the ritual the bank resets and a new week starts.",
+      rules_6: "By participating you acknowledge the rules and the irreversibility of crypto transfers.",
 
-      // Winners
+      // winners
       winners_title: "Winners — OneDollarCult",
-      winners_h1: "Ritual Winners",
-      total_winners: "Total winners: {n}",
       refresh_btn: "Refresh",
+      total_winners: (p) => `Total winners: ${p.n}`,
       col_avatar: "Avatar",
       col_user: "Participant",
       col_amount: "Prize amount",
       col_date: "Date",
       winners_none: "No rituals yet.",
 
-      // Philosophy
+      // philosophy
       ph_title: "The Legend of the Coin",
-      ph_p1: "They say there was a sage who dreamed of the impossible: one day every person on Earth would give him a single coin. He didn’t know why he needed those coins—only that on that day he would understand the meaning.",
-      ph_p2: "And one day God heard him. People from every country, without collusion, sent a coin. The sage became rich—not in gold, but in a reflection of the world.",
-      ph_p3: "Then he returned half back. Truth lies not in receiving, but in giving. Thus OneDollarCult was born."
+      ph_p1: "They say a sage dreamed the impossible: one day every person would give him a single coin.",
+      ph_p2: "One day the heavens heard. People everywhere sent a coin.",
+      ph_p3: "Then he returned half. Truth is not in taking, but returning. Thus OneDollarCult was born."
     }
   };
 
-  function interpolate(str, n) {
-    if (n == null) return str;
-    return String(str).replace("{n}", n);
+  const LS_KEY = "odc_lang";
+  let LANG = (localStorage.getItem(LS_KEY) || (navigator.language||"ru").toLowerCase().startsWith("en") ? "en" : "ru");
+  if (!["ru","en"].includes(LANG)) LANG = "ru";
+
+  function format(val, params) {
+    return typeof val === "function" ? val(params||{}) : val;
   }
 
-  function apply(lang) {
-    const dict = DICT[lang] || DICT.ru;
-
-    // Тексты
-    document.querySelectorAll("[data-i18n]").forEach(el => {
-      const key = el.getAttribute("data-i18n");
-      if (!key) return;
-      const n = el.getAttribute("data-n");
-      const val = dict[key];
-      if (val == null) return;
-
-      const out = interpolate(val, n);
-      if (el.tagName.toLowerCase() === "title") {
-        document.title = out;               // для <title data-i18n="...">
-      } else if (el.hasAttribute("data-i18n-ph")) {
-        el.setAttribute("placeholder", out);
-      } else {
-        el.textContent = out;
-      }
-    });
-
-    // Плейсхолдеры
-    document.querySelectorAll("[data-i18n-ph]").forEach(el => {
-      const key = el.getAttribute("data-i18n-ph");
-      const val = dict[key];
-      if (val != null) el.setAttribute("placeholder", val);
-    });
-
-    // Синхронизация селекторов языка
-    document.querySelectorAll("#langSel").forEach(s => { if (s.value !== lang) s.value = lang; });
+  function setText(el, key) {
+    const dict = DICT[LANG] || {};
+    const val = dict[key];
+    if (val === undefined || val === null) return; // НЕ трогаем, если ключа нет
+    el.textContent = format(val, { n: el.dataset.n ? Number(el.dataset.n) : undefined });
   }
 
-  const I18N = {
-    dict: DICT,
-    lang() { return w.LANG || "ru"; },
-    setLang(lang) {
-      try { localStorage.setItem("odc_lang", lang); } catch(e) {}
-      w.LANG = lang;
-      document.documentElement.lang = lang;
-      apply(lang);
-      try { window.dispatchEvent(new Event("langchange")); } catch(e) {}
-    },
-    apply
+  function setPlaceholder(el, key) {
+    const dict = DICT[LANG] || {};
+    const val = dict[key];
+    if (val === undefined || val === null) return;
+    el.setAttribute("placeholder", format(val, {}));
+  }
+
+  function applyLang() {
+    document.querySelectorAll("[data-i18n]").forEach(el => setText(el, el.getAttribute("data-i18n")));
+    document.querySelectorAll("[data-i18n-ph]").forEach(el => setPlaceholder(el, el.getAttribute("data-i18n-ph")));
+    document.documentElement.lang = LANG;
+    window.dispatchEvent(new Event("langchange"));
+  }
+
+  window.I18N = {
+    setLang(lc) { if (["ru","en"].includes(lc)) { LANG = lc; localStorage.setItem(LS_KEY, lc); applyLang(); } },
+    lang() { return LANG; },
+    t(key, params) {
+      const dict = DICT[LANG] || {};
+      const val = dict[key];
+      return val === undefined ? key : format(val, params);
+    }
   };
 
-  // Инициализация
-  (function initLang() {
-    let start = "ru";
-    try {
-      const saved = localStorage.getItem("odc_lang");
-      start = saved || ((navigator.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en");
-    } catch(e) {}
-    w.LANG = w.LANG || start;
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => apply(w.LANG));
-    } else {
-      apply(w.LANG);
-    }
-  })();
-
-  w.I18N = I18N;
-})(window);
+  // выставить селекторы языка, если есть
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("#langSel, #lang").forEach(sel => {
+      sel.value = LANG;
+      sel.addEventListener("change", e => window.I18N.setLang(e.target.value));
+    });
+    applyLang();
+  });
+})();

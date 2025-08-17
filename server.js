@@ -1,3 +1,4 @@
+// server.js (ESM)
 import express from "express";
 import cors from "cors";
 import path from "path";
@@ -7,33 +8,39 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 10000;
-
 app.use(cors());
 app.use(express.json());
 
-// 📌 Все статики из public/
+// ===== STATIC =====
 app.use(express.static(path.join(__dirname, "public")));
 
-// --- API заглушки (потом подставим реальные данные) ---
+// ===== CONFIG (можно менять только через ENV в Render) =====
+const BANK_TOTAL = Number(process.env.ODC_BANK_TOTAL ?? 6737);   // общий банк
+const PLAYERS     = Number(process.env.ODC_PLAYERS    ?? 12197); // игроков
+const LAST_WINNER = process.env.ODC_LAST_WINNER ?? "";           // опционально
+const LAST_DATE   = process.env.ODC_LAST_DATE   ?? "";           // опционально ISO
+
+// ===== API =====
 app.get("/api/bank", (req, res) => {
-  res.json({ ok: true, half: 6737 }); // временно ставим 6737$
+  const half = Math.round((BANK_TOTAL / 2) * 100) / 100;
+  res.json({ ok: true, total: BANK_TOTAL, half });
 });
 
 app.get("/api/stats", (req, res) => {
-  res.json({
-    ok: true,
-    players: 12197,
-    bank: 13474, // банк целиком
-    totalReceived: 13474,
-  });
+  res.json({ ok: true, players: PLAYERS, bank: BANK_TOTAL, totalReceived: BANK_TOTAL });
 });
 
-// 📌 Фоллбек — всегда index.html (чтобы React/Tilda роутинг не падал)
+app.get("/api/latest-winner", (req, res) => {
+  const amount = LAST_WINNER ? Math.round((BANK_TOTAL / 2) * 100) / 100 : null;
+  res.json({ ok: true, nickname: LAST_WINNER || null, amount, date: LAST_DATE || null });
+});
+
+// всё остальное — на индекс
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
-  console.log(`✅ ODC backend up on :${PORT}`);
+  console.log(`ODC backend up on :${PORT}`);
 });
